@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Hexo"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="Hexo"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="John Doe"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"Hexo","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"John Doe"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":""}</script><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-30T01:33:52.892Z" title="2022/7/30 09:33:52">2022-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-25T11:33:34.118Z" title="2022/7/25 19:33:34">2022-07-25</time></span><span class="level-item">18 minutes read (About 2771 words)</span></div></div><div class="content"><h1 id="数字图像处理系统项目报告"><a href="#数字图像处理系统项目报告" class="headerlink" title="数字图像处理系统项目报告"></a>数字图像处理系统项目报告</h1><h4 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h4><p>这个项目的华东师范大学软件工程学院数字图像处理的期末完整结课项目。由本人单独完成。这个项目主要实现了有以下的六个功能：</p>
+<p>1.数字图像基础  2.边缘检测  3.图像增强  4.图像修复  5.图像分割  6.人脸识别</p>
+<p>其中前五个功能基于opencv+python所实现的，最后一个人脸识别是结合了机器学习的知识，使用tensorflow+opencv+python<br>构建了卷积神经网络模型来实现的多人人脸识别功能。</p>
+<h4 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h4><ol>
+<li>python 3.6</li>
+<li>tensorflow 2.1.0(安装cpu版本) </li>
+<li>keras 2.3.1 </li>
+<li>scikit-learn 0.20.3 </li>
+<li>opencv-python 任意版本</li>
+<li>numpy</li>
+<li>pycharm 2021.3.3</li>
+</ol>
+<h4 id="安装教程"><a href="#安装教程" class="headerlink" title="安装教程"></a>安装教程</h4><p>不做赘述，利用anaconda，搭建一个新的虚拟环境来进行以上环境的一个一个的配置</p>
+<h4 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h4><p>执行项目中的main()函数来进行整个项目的运行，根据提示的文字来进行一系列的操作</p>
+<p>FaceData为存储人脸数据的文件，用来存放数据集</p>
+<p>model为存储人脸识别模型的文件，用来存放训练完的CNN模型</p>
+<p>Wangwenhai 为本人的一段视频数据，用于收集数据</p>
+<h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>接下来将会对我如何实现的这系列功能做详细的介绍</p>
+<h4 id="数字图像基础"><a href="#数字图像基础" class="headerlink" title="数字图像基础"></a>数字图像基础</h4><p>图像的仿射变化：<br>    使用cv2.warpAffine()函数，来实现图像的仿射变化。仿射变换可以通<br>过一系列的原子变换的复合来实现包括：平移(Translation)、缩放(Scale)、翻转(Flip)、<br>旋转(Rotation)和错切(Shear)这些功能。 至于如何具体实现这些功能，则要取决于2*3的<br>变换矩阵 M的具体内容</p>
+<p>图形的扩展缩放、平移、旋转：<br>    这个功能的实现结合的图像的仿射变化，其中缩放利用了cv2,resize()函数来实现对图像的缩放，<br>cv2.warpAffine()实现了图像的平移和利用了 cv2.getRotationMatrix2D()这个函数来构造旋转<br>是的变换矩阵来用于图像的仿射变化。是仿射变化的拓展和更多的实际应用。本功能实现的是图像的x轴左移<br>10个像素，y轴下移30个。之后进行旋转中心坐标为处理后图片长宽的一半，旋转角度为45度，缩放因子为1的旋转。</p>
+<h4 id="边缘检测"><a href="#边缘检测" class="headerlink" title="边缘检测"></a>边缘检测</h4><p>边缘检测目的是找到图像中亮度变化剧烈的像素点构成的集合。由此构建出来的轮廓来更好的实现精准的测量和<br>定位。图像边缘有两个要素：方向和幅度。沿着边缘走向的像素值变化比较平缓；而沿着垂直于边缘的走向，<br>像素值则变化得比较大。因此，我们采用一阶和二阶导数来描述和检测边缘。 我实现了以下四个算子：</p>
+<p>一阶微分算子：Roberts,Sobel算子</p>
+<p>二阶微分算子：Laplacian，Laplacian-gauss算子</p>
+<h4 id="图像增强"><a href="#图像增强" class="headerlink" title="图像增强"></a>图像增强</h4><p>图像增强可以分为四个模块-空域的锐化，空域的平滑，频域的锐化，频域的平滑下面将分别介绍实现的方式</p>
+<p>空域的锐化：锐化的作用一般是用来加强图像的轮廓和边缘，其本质是高通滤波器。锐化的结果是增强了边缘。<br>但是图像本身的层次和亮度已基本丢失。这里使用的方式与边缘检测雷同。<br>我使用的一阶微分算子：Roberts算子，Sobel算子，Prewitt算子<br>二阶微分算子：Laplacian算子</p>
+<p>空域的平滑：图像平滑的目的是改善图像质量，尽量消除噪声对图像带来的影响，其本质是低通滤波。图像的<br>空域平滑实现起来很简单，只要将原图中的每一个点的灰度与它周围点的灰度进行加权和平均，作为新图中对<br>应点的灰度，就能实现滤波的效果。以下我使用了三种滤波器，分别是： 中值滤波器，均值滤波器，高斯滤波器<br>其中高斯滤波的效果最好，由于引入了加权系数，平滑的效果也是最好的。</p>
+<p>频域的锐化：从频谱分析的角度看, 图像都是由决定图像反差的低频信号和决定图像细节的高频信号组<br>成。但数字化图像中高频信号部分总是掺杂有一定程度的噪声。因此, 在频率域中进行图像的锐<br>化处理实质上是加强需要的高频分量,并必须考虑到要在锐化图像的同时抑制噪声。频率域中滤波的数学表达式可写为</p>
+<p>G(u,v)&#x3D;H(u,v)⋅F(u,v) </p>
+<p>上式中,F(u,v)是原始图像的Fouirer频谱,G(u,v)是锐化后图像的Fouirer频谱,H(u,v)是滤波器的转移函数。<br>我使用的三种滤波器： 1.理想高通滤波 2.巴特沃斯高通滤波 3.指数高通滤波器</p>
+<p>频域的平滑：再频谱分析中，噪声往往有着较丰富的高频分量，此时就需要低通滤波来降噪。我是用了三种滤波器，<br>1.理想低通滤波 2.巴特沃斯低通滤波 3.指数低通滤波器<br>总而言之，平滑就是降噪，锐化就是突出边缘</p>
+<h4 id="图像修复"><a href="#图像修复" class="headerlink" title="图像修复"></a>图像修复</h4><p>图像就是利用那些已经被破坏的区域的边缘，根据这些图像留下的信息去推断被破坏的区域的信息内容，然后对<br>破坏区进行填补 ，以达到图像修补的目的。这里我是用了两种方式，一种是opencv库中的cv2.inpaint()函数。<br>第二种则是模仿人类视觉系统的Retinex算法，适合对光照条件不好，有迷雾的图片做修复。下面是详细介绍</p>
+<p>1.inpaint函数： 在opencv种，有dst &#x3D; cv2.inpaint（src，mask, inpaintRadius，flags）其中，<br>其中，src是原图像，inpaintMask是掩膜，是需要修复的部分，inpaintRadius是算法需要考虑的每个点的圆形<br>邻域的半径，flags则是使用的算法INPAINT_NS和INPAINT_TELEA。</p>
+<p>2.Retinex算法：Retinex理论的基础理论是物体的颜色是由物体对长波（红色）、中波（绿色）、 短波（蓝色）<br>光线的反射能力来决定的，而不是由反射光强度的绝对值来决定的，物体的色彩不受光照非均匀性的影响，具有一致性，<br>即retinex是以色感一致性（颜色恒常性）为基础的。下面介绍我实现的四类Retinex算法：单尺度Retinex算法，<br>MSR改进成多尺度加权平均的MSR算法，彩色恢复多尺度MSRCR算法和色彩增益加权的AutoMSRCR算法。</p>
+<p>SSR：先将图像进行log变换，然后将log图像进行高斯模糊，最后利用原图和模糊之后的log图像做差分</p>
+<p>MSR：原始图像进行三次SSR，高斯模糊选择15，80，200作为高斯模糊sigma参数，对三次的SSR结果做平均即为MSR图像</p>
+<p>MSRCR：autoMSRCR：对多尺度MSR结果做了色彩平衡，归一化，增益和偏差线性加权</p>
+<h4 id="图像分割"><a href="#图像分割" class="headerlink" title="图像分割"></a>图像分割</h4><p>图像分割的实现使用深度学习的知识会有更好的实现效果，这里我没有使用深度学习。我是使用 OpenCV 函数filter2D<br>执行一些拉普拉斯滤波以进行图像锐化来突出细节，distanceTransform 以获得二值图像的派生(derived)表示，其中<br>每个像素的值被替换为其到最近背景像素的距离，并执行一些图像形态学操作来提取峰值，最后使用watershed（分水岭算法）<br>将图像中的对象与背景隔离。最终实现了图像的分割。</p>
+<h4 id="人脸识别"><a href="#人脸识别" class="headerlink" title="人脸识别"></a>人脸识别</h4><p>（写在前面，人脸识别的数据必须是两个人以上，只录入一个人的图像是无法开始训练的。训练的模型保存在model中，若不想<br>使用电脑摄像头来拍摄图像，可以修改gain_face中cv2.VideoCapture()的参数来从硬盘中读取数据）</p>
+<p>这个部分使用了机器学习的知识，利用CNN搭建了一个人脸识别模型（只能识别多人，单人不行），下面介绍详细的流程：</p>
+<p>1.图片的获取：这里我调用了电脑自带的摄像机来获取数据集，每个人拍摄100张照片（缩短训练时间，可以在recognition_face.py）<br>中修改images_num来改变每个人的照片数量。使用haarcascade_frontalface_alt2人脸识别器来捕捉人脸图片保存在Facedata，<br>并且转为灰度图来 提高计算的效率。（考虑到灰度图可能需要增强，可以在gain_face.py最后面加上增强的代码）</p>
+<p>2.数据集的构建：这里将所有获取的图像的大小都设计为128*128，并且使用在Facedata这个文件中人脸数据文件夹的次序作为唯一标签。比<br>如 Wangwenhai这个文件是目录下的第1个文件，那么Wangwenhai里的图像的标签就是1</p>
+<p>3.人脸数据的训练：我构建了一个18层的CNN模型，用来训练数据，并且使用了adam来作为模型的优化器，由于我构建的是多分类模型。故使用<br>binary_crossentropy作为损失函数。同时我还定义一个生成器用于数据提升，其返回一个生成器对象datagen来强化学习。最后，由face_predict<br>函数来返回预测的结果。</p>
+<p>4.人脸识别:利用模型返回的预测值来对摄像头扑捉到的图像做出预测</p>
+<p>####总结<br>通过长达两个星期的学习，我对计算机视觉这方面的知识有了更为深刻的理解，对opencv的使用更加熟练。而最令我收获最多的是我完成了我的第一<br>个人脸识别的项目，算是对机器学习有了浅浅的入门。总而言之，这个项目由我单独完成，我从这个课程收获颇多。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-30T01:20:57.134Z" title="2022/7/30 09:20:57">2022-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-30T01:20:57.134Z" title="2022/7/30 09:20:57">2022-07-30</time></span><span class="level-item">a minute read (About 123 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/30/hello-world/">Hello World</a></h1><div class="content"><p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+</div></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">2</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">Links</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-30T01:33:52.892Z">2022-07-30</time></p><p class="title"><a href="/2022/07/30/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/"> </a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-30T01:20:57.134Z">2022-07-30</time></p><p class="title"><a href="/2022/07/30/hello-world/">Hello World</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">July 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">Subscribe for updates</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2022 John Doe</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
