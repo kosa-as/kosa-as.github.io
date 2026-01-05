@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>C++语言特性相关 - kosa-as</title><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="3273dc"><meta name="application-name" content="kosa-as"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="msapplication-TileColor" content="3273dc"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="kosa-as"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="本文详细介绍C++语言的核心特性，包括左值与右值引用的区别与转换，指针用法与引用对比，函数指针定义，以及参数传递方式。同时探讨了迭代器设计，类型转换机制和野指针处理等高级话题，帮助读者深入理解C++语言的精髓与应用技巧。"><meta property="og:type" content="blog"><meta property="og:title" content="C++语言特性相关"><meta property="og:url" content="https://kosa-as.github.io/2025/02/25/cpp/C++%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E7%9B%B8%E5%85%B3/"><meta property="og:site_name" content="kosa-as"><meta property="og:description" content="本文详细介绍C++语言的核心特性，包括左值与右值引用的区别与转换，指针用法与引用对比，函数指针定义，以及参数传递方式。同时探讨了迭代器设计，类型转换机制和野指针处理等高级话题，帮助读者深入理解C++语言的精髓与应用技巧。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://kosa-as.github.io/img/og_image.png"><meta property="article:published_time" content="2025-02-24T16:00:00.000Z"><meta property="article:modified_time" content="2026-01-04T09:16:20.544Z"><meta property="article:author" content="kosa-as"><meta property="article:tag" content="Template"><meta property="article:tag" content="C++语言特性"><meta property="article:tag" content="左值右值"><meta property="article:tag" content="引用"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://kosa-as.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://kosa-as.github.io/2025/02/25/cpp/C++%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E7%9B%B8%E5%85%B3/"},"headline":"C++语言特性相关","image":["https://kosa-as.github.io/img/og_image.png"],"datePublished":"2025-02-24T16:00:00.000Z","dateModified":"2026-01-04T09:16:20.544Z","author":{"@type":"Person","name":"kosa-as"},"publisher":{"@type":"Organization","name":"kosa-as","logo":{"@type":"ImageObject","url":"https://kosa-as.github.io/img/logo.png"}},"description":"本文详细介绍C++语言的核心特性，包括左值与右值引用的区别与转换，指针用法与引用对比，函数指针定义，以及参数传递方式。同时探讨了迭代器设计，类型转换机制和野指针处理等高级话题，帮助读者深入理解C++语言的精髓与应用技巧。"}</script><link rel="canonical" href="https://kosa-as.github.io/2025/02/25/cpp/C++%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E7%9B%B8%E5%85%B3/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.0.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="kosa-as" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/kosa-as"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-02-24T16:00:00.000Z" title="2025/2/25 00:00:00">2025-02-25</time>发表</span><span class="level-item"><time dateTime="2026-01-04T09:16:20.544Z" title="2026/1/4 17:16:20">2026-01-04</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/C/">C++</a></span><span class="level-item">13 分钟读完 (大约1961个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">C++语言特性相关</h1><div class="content"><!-- more -->
+
+<h4 id="1-左值引用右值引用"><a href="#1-左值引用右值引用" class="headerlink" title="1.左值引用右值引用"></a>1.左值引用右值引用</h4><p>左值（Lvalue，Locator Value）指的是<strong>可以被取地址的值</strong>，即在表达式结束后仍然存在的对象。例如，变量、数组元素、对象等都是左值。</p>
+<p><strong>左值引用</strong>用于绑定左值，并且通常用于传递和修改可变对象。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span>&amp; ref = a;  <span class="comment">// ref 绑定到 a</span></span><br><span class="line">ref = <span class="number">20</span>;      <span class="comment">// 修改 ref 也会影响 a</span></span><br></pre></td></tr></table></figure>
+
+<p>右值（Rvalue，Right-hand value）指的是<strong>无法取地址的临时值</strong>，通常是表达式计算的结果，如字面量、临时变量等。</p>
+<p><strong>右值引用</strong>使用 <code>&amp;&amp;</code> 语法，用于绑定右值，使得右值可以被高效地移动，而不是复制。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>&amp;&amp; rref = <span class="number">10</span>;  <span class="comment">// 10 是右值，可以绑定到右值引用</span></span><br><span class="line">std::cout &lt;&lt; rref &lt;&lt; std::endl;  <span class="comment">// 输出 10</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>左值引用 vs 右值引用</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>左值引用 <code>&amp;</code></th>
+<th>右值引用 <code>&amp;&amp;</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>绑定对象</strong></td>
+<td>只能绑定左值</td>
+<td>只能绑定右值</td>
+</tr>
+<tr>
+<td><strong>修改对象</strong></td>
+<td>可以修改</td>
+<td>可以修改</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>传递可变对象</td>
+<td>移动语义、避免拷贝</td>
+</tr>
+<tr>
+<td><strong>常见用法</strong></td>
+<td>普通变量引用、函数参数</td>
+<td>移动构造、移动赋值</td>
+</tr>
+</tbody></table>
+<h4 id="2-左值引用和右值引用的转化"><a href="#2-左值引用和右值引用的转化" class="headerlink" title="2.左值引用和右值引用的转化"></a>2.左值引用和右值引用的转化</h4><ul>
+<li><code>std::move()</code>:是一个<strong>转换工具</strong>，用于将左值<strong>强制转换为右值</strong>，从而触发<strong>移动语义</strong></li>
+<li><code>std::forward&lt;T&gt;()</code>:主要用于泛型编程，保证在模板参数传递时，保留左右值的<strong>原始属性</strong>，实现<strong>完美转发</strong>。</li>
+<li><code>std::move_if_noexcept()</code>:在某些情况下，如果移动构造可能抛出异常，我们可能更希望使用<strong>拷贝构造</strong>。<code>std::move_if_noexcept</code> 可用于这种情况</li>
+</ul>
+<h4 id="3-指针的大小与用法"><a href="#3-指针的大小与用法" class="headerlink" title="3.指针的大小与用法"></a>3.指针的大小与用法</h4><ul>
+<li>指针的大小和编译器的<strong>目标平台的位数</strong>，而<strong>与所指向的数据类型无关</strong>。如果是32位的机器，则指针的大小则是4Byte，如果是64位机器，那么指针的大小是8Byte。</li>
+<li>指针存储变量的内存地址，使用 <code>&amp;</code> 获取地址，使用 <code>*</code> 解引用指针以访问数据。</li>
+<li><strong>指针作为函数参数</strong>：实现<strong>传址调用</strong>，允许函数直接修改原始数据。<strong>函数指针</strong>：用于回调机制或策略模式等</li>
+</ul>
+<h4 id="4-指针和引用的区别"><a href="#4-指针和引用的区别" class="headerlink" title="4.指针和引用的区别"></a>4.指针和引用的区别</h4><p><strong>总结对比表</strong></p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>指针</th>
+<th>引用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>是否需要初始化</strong></td>
+<td>不需要，可以为空</td>
+<td>必须初始化</td>
+</tr>
+<tr>
+<td><strong>是否能重新指向</strong></td>
+<td>可以</td>
+<td>不可以</td>
+</tr>
+<tr>
+<td><strong>是否可为空</strong></td>
+<td>可以指向 <code>nullptr</code></td>
+<td>不可以</td>
+</tr>
+<tr>
+<td><strong>是否有独立内存</strong></td>
+<td>是，占用内存存储地址</td>
+<td>否，与原变量共用内存</td>
+</tr>
+<tr>
+<td><strong>是否可修改值</strong></td>
+<td>通过 <code>*</code> 解引用后可修改</td>
+<td>可修改（除非 <code>const</code> 修饰）</td>
+</tr>
+<tr>
+<td><strong>典型应用场景</strong></td>
+<td>动态内存分配、数据结构</td>
+<td>参数传递、引用更安全的别名</td>
+</tr>
+</tbody></table>
+<h4 id="5-指针常量和常量指针"><a href="#5-指针常量和常量指针" class="headerlink" title="5.指针常量和常量指针"></a>5.指针常量和常量指针</h4><p><strong>常量指针（<code>const T*</code>）</strong>：指向的值<strong>不能修改</strong>，但指针本身的指向<strong>可以更改</strong>。（即只能读，不能修改）</p>
+<p><strong>指针常量（<code>T* const</code>）</strong>：指针本身的指向<strong>不能更改</strong>，但指向的值<strong>可以修改</strong>。</p>
+<h4 id="6-函数指针的定义"><a href="#6-函数指针的定义" class="headerlink" title="6.函数指针的定义"></a>6.函数指针的定义</h4><p><strong>函数指针 (Function Pointer)</strong> 是指向<strong>函数的地址</strong>的指针。与普通指针不同，函数指针指向的是<strong>可执行代码段</strong>中的函数入口地址，而非数据</p>
+<p> <strong>函数指针的基本语法</strong></p>
+<p>定义函数指针的一般形式为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">返回类型 (*指针变量名)(参数类型列表);</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-CPP中函数传递参数的方法"><a href="#7-CPP中函数传递参数的方法" class="headerlink" title="7.CPP中函数传递参数的方法"></a>7.CPP中函数传递参数的方法</h4><p>在 C++ 中，函数传递参数的方式主要有以下几种：</p>
+<ol>
+<li><p><strong>值传递（Pass by Value）</strong></p>
+<ul>
+<li>形参是实参的副本，在函数内对参数的修改不会影响原始数据。</li>
+<li>适用于<strong>基本数据类型</strong>，但对于大对象会导致不必要的拷贝开销。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123; x = <span class="number">10</span>; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>引用传递（Pass by Reference）</strong></p>
+<ul>
+<li>形参是实参的引用，函数内的修改会直接影响原始数据。</li>
+<li>适用于<strong>需要修改参数的情况</strong>，或者<strong>避免拷贝大对象</strong>以提升效率。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(<span class="type">int</span>&amp; x)</span> </span>&#123; x = <span class="number">10</span>; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>指针传递（Pass by Pointer）</strong></p>
+<ul>
+<li>形参是指向实参的指针，可以在函数内修改原数据。</li>
+<li>需要检查<strong>指针是否为空</strong>，避免空指针访问错误。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(<span class="type">int</span>* x)</span> </span>&#123; <span class="keyword">if</span> (x) *x = <span class="number">10</span>; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>常量引用传递（Pass by Const Reference）</strong></p>
+<ul>
+<li>适用于<strong>大对象的只读传递</strong>，既避免了拷贝，又保证了数据不会被修改。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(<span class="type">const</span> std::string&amp; str)</span> </span>&#123; std::cout &lt;&lt; str; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>右值引用传递（Pass by Rvalue Reference）</strong>（C++11及以上）</p>
+<ul>
+<li>允许传递<strong>右值（临时对象）</strong>，通常用于<strong>移动语义（move semantics）</strong>，提高效率。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(std::string&amp;&amp; str)</span> </span>&#123; std::cout &lt;&lt; str; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>智能指针传递（Pass by Smart Pointer）</strong>（C++11及以上）</p>
+<ul>
+<li>通过 <code>std::shared_ptr</code> 或 <code>std::unique_ptr</code> 传递对象，管理内存生命周期。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(std::shared_ptr&lt;<span class="type">int</span>&gt; ptr)</span> </span>&#123; std::cout &lt;&lt; *ptr; &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>不同的方式适用于不同的场景，应根据<strong>性能需求</strong>和<strong>数据安全性</strong>来选择合适的参数传递方式。</p>
+<h4 id="8-迭代器"><a href="#8-迭代器" class="headerlink" title="8.迭代器"></a>8.迭代器</h4><p>迭代器（<code>Iterator</code>）是 <strong>C++ STL（标准模板库）</strong> 中用于<strong>遍历容器</strong>（如 <code>vector</code>、<code>list</code>、<code>map</code> 等）的一种<strong>通用接口</strong>。迭代器提供了一种类似指针的方式来访问容器中的元素，同时又能适应不同类型的容器。</p>
+<p>C++ 提供了 <strong>五种迭代器</strong>，分别适用于不同类型的容器和操作：</p>
+<table>
+<thead>
+<tr>
+<th>迭代器类型</th>
+<th>说明</th>
+<th>适用容器</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>输入迭代器</strong> (<code>InputIterator</code>)</td>
+<td>只能 <strong>从前向后读取</strong> 数据</td>
+<td><code>istream_iterator</code></td>
+</tr>
+<tr>
+<td><strong>输出迭代器</strong> (<code>OutputIterator</code>)</td>
+<td>只能 <strong>向前写入</strong> 数据</td>
+<td><code>ostream_iterator</code></td>
+</tr>
+<tr>
+<td><strong>前向迭代器</strong> (<code>ForwardIterator</code>)</td>
+<td>可读可写，可<strong>单向移动</strong></td>
+<td><code>forward_list</code></td>
+</tr>
+<tr>
+<td><strong>双向迭代器</strong> (<code>BidirectionalIterator</code>)</td>
+<td>可读可写，可<strong>双向移动</strong></td>
+<td><code>list</code>、<code>map</code>、<code>set</code></td>
+</tr>
+<tr>
+<td><strong>随机访问迭代器</strong> (<code>RandomAccessIterator</code>)</td>
+<td>可读可写，可<strong>随机跳转</strong></td>
+<td><code>vector</code>、<code>deque</code></td>
+</tr>
+</tbody></table>
+<p> <strong>常见 STL 容器的迭代器</strong></p>
+<table>
+<thead>
+<tr>
+<th>容器</th>
+<th><code>begin()</code></th>
+<th><code>end()</code></th>
+<th>迭代器类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>vector</code></td>
+<td><code>vector&lt;int&gt;::iterator</code></td>
+<td><code>vector&lt;int&gt;::iterator</code></td>
+<td><strong>随机访问</strong></td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td><code>list&lt;int&gt;::iterator</code></td>
+<td><code>list&lt;int&gt;::iterator</code></td>
+<td><strong>双向</strong></td>
+</tr>
+<tr>
+<td><code>map</code></td>
+<td><code>map&lt;int, int&gt;::iterator</code></td>
+<td><code>map&lt;int, int&gt;::iterator</code></td>
+<td><strong>双向</strong></td>
+</tr>
+<tr>
+<td><code>set</code></td>
+<td><code>set&lt;int&gt;::iterator</code></td>
+<td><code>set&lt;int&gt;::iterator</code></td>
+<td><strong>双向</strong></td>
+</tr>
+</tbody></table>
+<h4 id="9-野指针和悬空指针"><a href="#9-野指针和悬空指针" class="headerlink" title="9.野指针和悬空指针"></a>9.野指针和悬空指针</h4><p><strong>野指针 vs 悬空指针</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>类别</strong></th>
+<th><strong>定义</strong></th>
+<th><strong>产生原因</strong></th>
+<th><strong>如何修正</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>野指针</strong></td>
+<td><strong>未初始化的指针，指向未知地址</strong></td>
+<td>1. 没有初始化 2. 释放后未置空 3. 超出作用域</td>
+<td><strong>初始化指针为 nullptr</strong></td>
+</tr>
+<tr>
+<td><strong>悬空指针</strong></td>
+<td><strong>指向已释放的无效内存</strong></td>
+<td>1. 释放后仍然访问 2. 作用域结束后访问 3. 二次释放</td>
+<td><strong>释放后将指针置空</strong></td>
+</tr>
+</tbody></table>
+<h4 id="10-类型转化"><a href="#10-类型转化" class="headerlink" title="10.类型转化"></a>10.类型转化</h4><p><code>static_cast</code> vs <code>dynamic_cast</code></p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th><code>static_cast</code></th>
+<th><code>dynamic_cast</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>转换时间</strong></td>
+<td>编译时</td>
+<td>运行时</td>
+</tr>
+<tr>
+<td><strong>是否安全检查</strong></td>
+<td>❌ 无检查</td>
+<td>✅ 运行时检查</td>
+</tr>
+<tr>
+<td><strong>适用范围</strong></td>
+<td>基本类型、多态类型、void*</td>
+<td>仅适用于多态类型</td>
+</tr>
+<tr>
+<td><strong>转换失败时</strong></td>
+<td>未定义行为</td>
+<td>返回 <code>nullptr</code>（指针）&#x2F; 抛异常（引用）</td>
+</tr>
+<tr>
+<td><strong>速度</strong></td>
+<td>⚡ 高效</td>
+<td>🐢 慢（因运行时检查）</td>
+</tr>
+</tbody></table>
+<p><strong>四种转换方式对比</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>转换类型</strong></th>
+<th><strong>转换方式</strong></th>
+<th><strong>运行时检查</strong></th>
+<th><strong>适用范围</strong></th>
+<th><strong>推荐使用情况</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>static_cast</code></td>
+<td>编译时转换</td>
+<td>❌ 无</td>
+<td>兼容类型转换</td>
+<td>✅ 用于安全转换，如 <code>int → double</code></td>
+</tr>
+<tr>
+<td><code>dynamic_cast</code></td>
+<td>运行时转换</td>
+<td>✅ 有</td>
+<td>多态类型（有虚函数）</td>
+<td>✅ 适用于父子类转换，确保安全</td>
+</tr>
+<tr>
+<td><code>const_cast</code></td>
+<td>移除&#x2F;添加 <code>const</code></td>
+<td>❌ 无</td>
+<td>指针&#x2F;引用</td>
+<td>✅ 需要修改 <code>const</code> 变量时</td>
+</tr>
+<tr>
+<td><code>reinterpret_cast</code></td>
+<td>低级转换</td>
+<td>❌ 无</td>
+<td>指针&#x2F;整数&#x2F;位级转换</td>
+<td>⚠️ 极少使用，仅用于底层编程</td>
+</tr>
+</tbody></table>
+</div><div class="article-licensing box"><div class="licensing-title"><p>C++语言特性相关</p><p><a href="https://kosa-as.github.io/2025/02/25/cpp/C++语言特性相关/">https://kosa-as.github.io/2025/02/25/cpp/C++语言特性相关/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>kosa-as</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2025-02-25</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2026-01-04</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Template/">Template</a><a class="link-muted mr-2" rel="tag" href="/tags/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/">C++语言特性</a><a class="link-muted mr-2" rel="tag" href="/tags/%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC/">左值右值</a><a class="link-muted mr-2" rel="tag" href="/tags/%E5%BC%95%E7%94%A8/">引用</a></div><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a><a class="a2a_button_facebook"></a><a class="a2a_button_twitter"></a><a class="a2a_button_telegram"></a><a class="a2a_button_whatsapp"></a><a class="a2a_button_reddit"></a></div><script src="https://static.addtoany.com/menu/page.js" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2025/02/25/cpp/C++%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">C++关键字解析</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2025/02/25/cpp/C++%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"><span class="level-item">C++面向对象</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div id="comment-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+            id: "fd52a825df0e174d4e50ea50175e7a87",
+            repo: "kosa-as.github.io",
+            owner: "kosa-as",
+            clientID: "3b2bef5e46e6c8df3949",
+            clientSecret: "842d82f5dfdd26dc2821298dc2b426e9dede463e",
+            admin: ["kosa-as"],
+            createIssueManually: false,
+            distractionFreeMode: false,
+            perPage: 10,
+            pagerDirection: "last",
+            
+            
+            enableHotKey: true,
+            
+        })
+        gitalk.render('comment-container')</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.jpg" alt="wwh66258"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">wwh66258</p><p class="is-size-6 is-block">Software Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>上海 普陀</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">20</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">10</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">43</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/kosa-as" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/kosa-as"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/C/"><span class="level-start"><span class="level-item">C++</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile" href="/categories/Java/"><span class="level-start"><span class="level-item">Java</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/STL/"><span class="level-start"><span class="level-item">STL</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E4%BA%91/"><span class="level-start"><span class="level-item">云</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E4%BA%91%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83/"><span class="level-start"><span class="level-item">云数据中心</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="level-start"><span class="level-item">博客搭建</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/"><span class="level-start"><span class="level-item">前端开发</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">操作系统</span></span><span class="level-end"><span class="level-item tag">3</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Linux的内存</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E5%86%85%E6%A0%B8%E5%90%8C%E6%AD%A5/">Linux的内核同步</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%92%8C%E4%BF%A1%E5%8F%B7/">Linux的系统调用和信号</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/%E7%94%A8hexo+icarus%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">用hexo+icarus搭建个人博客</a></p><p class="categories"><a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a> / <a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.546Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">Linux中的文件系统</a></p><p class="categories"><a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2026/01/"><span class="level-start"><span class="level-item">一月 2026</span></span><span class="level-end"><span class="level-item tag">17</span></span></a></li><li><a class="level is-mobile" href="/archives/2025/02/"><span class="level-start"><span class="level-item">二月 2025</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/C-%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/"><span class="tag">C++关键字解析</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C-%E6%8C%87%E9%92%88/"><span class="tag">C++指针</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/"><span class="tag">C++语言特性</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GitHub-Pages/"><span class="tag">GitHub Pages</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Gitalk/"><span class="tag">Gitalk</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/IO/"><span class="tag">IO</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Icarus/"><span class="tag">Icarus</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OLAP/"><span class="tag">OLAP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OLTP/"><span class="tag">OLTP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RAII/"><span class="tag">RAII</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/SFINAE/"><span class="tag">SFINAE</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/STL/"><span class="tag">STL</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Template/"><span class="tag">Template</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/k8s/"><span class="tag">k8s</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/"><span class="tag">lambda表达式</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%B8%AD%E6%96%AD/"><span class="tag">中断</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80/"><span class="tag">内存寻址</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"><span class="tag">内存管理</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%90%8C%E6%AD%A5/"><span class="tag">同步</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC/"><span class="tag">左值右值</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/"><span class="tag">并发编程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%B6%E8%A1%8C/"><span class="tag">并行</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%82%E5%B8%B8/"><span class="tag">异常</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%82%E6%AD%A5/"><span class="tag">异步</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%95%E7%94%A8/"><span class="tag">引用</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="tag">操作系统</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/"><span class="tag">数据仓库</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E6%B9%96/"><span class="tag">数据湖</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F/"><span class="tag">数据系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"><span class="tag">文件系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9E%84%E9%80%A0%E9%A1%BA%E5%BA%8F/"><span class="tag">构造顺序</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D/"><span class="tag">模板匹配</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B9%96%E4%BB%93%E4%B8%80%E4%BD%93/"><span class="tag">湖仓一体</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4/"><span class="tag">类型擦除</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"><span class="tag">编译原理</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="tag">设计模式</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6%E7%89%B9%E6%80%A7/"><span class="tag">运行时特性</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/"><span class="tag">进程描述符</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/"><span class="tag">面向对象编程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%A1%B5%E8%A1%A8/"><span class="tag">页表</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="kosa-as" height="28"></a><p class="is-size-7"><span>&copy; 2026 kosa-as</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

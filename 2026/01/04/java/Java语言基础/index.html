@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Java语言基础 - kosa-as</title><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="3273dc"><meta name="application-name" content="kosa-as"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="msapplication-TileColor" content="3273dc"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="kosa-as"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="本文介绍了基于Java 21 的Java语言知识简要概括"><meta property="og:type" content="blog"><meta property="og:title" content="Java语言基础"><meta property="og:url" content="https://kosa-as.github.io/2026/01/04/java/Java%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/"><meta property="og:site_name" content="kosa-as"><meta property="og:description" content="本文介绍了基于Java 21 的Java语言知识简要概括"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://kosa-as.github.io/img/java/Java_Throwable.png"><meta property="article:published_time" content="2026-01-04T09:16:20.544Z"><meta property="article:modified_time" content="2026-01-04T09:16:20.544Z"><meta property="article:author" content="kosa-as"><meta property="article:tag" content="类型擦除"><meta property="article:tag" content="面向对象编程"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://kosa-as.github.io/img/java/Java_Throwable.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://kosa-as.github.io/2026/01/04/java/Java%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/"},"headline":"Java语言基础","image":["https://kosa-as.github.io/img/java/Java_Throwable.png"],"datePublished":"2026-01-04T09:16:20.544Z","dateModified":"2026-01-04T09:16:20.544Z","author":{"@type":"Person","name":"kosa-as"},"publisher":{"@type":"Organization","name":"kosa-as","logo":{"@type":"ImageObject","url":"https://kosa-as.github.io/img/logo.png"}},"description":"本文介绍了基于Java 21 的Java语言知识简要概括"}</script><link rel="canonical" href="https://kosa-as.github.io/2026/01/04/java/Java%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.0.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="kosa-as" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/kosa-as"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2026-01-04T09:16:20.544Z" title="2026/1/4 17:16:20">2026-01-04</time>发表</span><span class="level-item"><time dateTime="2026-01-04T09:16:20.544Z" title="2026/1/4 17:16:20">2026-01-04</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Java/">Java</a></span><span class="level-item">35 分钟读完 (大约5278个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Java语言基础</h1><div class="content"><!-- more -->
+
+<h3 id="Java程序基础"><a href="#Java程序基础" class="headerlink" title="Java程序基础"></a>Java程序基础</h3><h4 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h4><p>Java的类型分为两大类,分别是基本数据类型和引用类型</p>
+<ul>
+<li>基本数据类型:byte, short, int, long, float, double, char</li>
+<li>引用类型:除了上述的基本数据类型,其它所有的类型都是引用类型. 其中,数组Array也是引用类型</li>
+</ul>
+<h4 id="数组的使用"><a href="#数组的使用" class="headerlink" title="数组的使用:"></a>数组的使用:</h4><p>Java和C++略有不同,其中数组的声明是以类型+[]的形式.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明一个int类型的int数组</span></span><br><span class="line"><span class="type">int</span>[] num  = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="comment">//声明一个String类型的数组</span></span><br><span class="line">String[] strings = &#123;<span class="string">&quot;hello&quot;</span>,<span class="string">&quot;world&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>需要注意的是:</strong></p>
+<p>如果对数组进行<code>Arrays.sort</code>方法排序,如果存储的类型是基本的数据类型,那么会直接对存储的数据做操作,如果是引用的类型的话,并不会直接移动在JVM中实际的存储位置,而是会只对其引用做排序.</p>
+<h3 id="面向对象基础"><a href="#面向对象基础" class="headerlink" title="面向对象基础"></a>面向对象基础</h3><p>面向对象的基础即三个:封装,多态,继承. 所有面向对象的知识都是围绕这三个展开的</p>
+<h4 id="类-class-和实例-instance"><a href="#类-class-和实例-instance" class="headerlink" title="类(class)和实例(instance)"></a>类(class)和实例(instance)</h4><p>类是对现实世界进行抽象来映射到计算机模型的产物.而实例则是依据类实例化的产物. 类也可以理解为对一个概念的封装</p>
+<p>就好比:人是一个抽象概念,而笔者则是人的一个实例</p>
+<h4 id="字段-feilds-和方法-method"><a href="#字段-feilds-和方法-method" class="headerlink" title="字段(feilds)和方法(method)"></a>字段(feilds)和方法(method)</h4><p>字段和方法从UML中的定义去理解可能会更加的简单.即字段是属性,而方法则是操作</p>
+<p>使用方法就要使用参数,这里对方法的参数作出介绍:</p>
+<p><strong>要强调的是: 参数如果是基本类型,那么会在存储位置直接作出修改；如果是引用类型,那么传递的实际上是引用的地址</strong></p>
+<ul>
+<li>方法参数: 方法可以包括0个或者多个参数,调用方法的时候参数必须一一对应传递</li>
+<li>可变参数: 和CPP 17之后引入的折叠表达式一样, 使用<code>类型...</code>定义.</li>
+<li>this变量: 这里我个人倾向放在方法中来讲,因为每个方法都能访问到this变量,可以理解为隐藏在方法内的参数</li>
+</ul>
+<p>提到方法,有一种特殊的方法,是用来创造实例的,即构造(construct). 如果一个类没有申明任何一个构造函数,那么Javac会默认实现一个构造函数. 如果你一但申明了构造函数,那么Javac就不会这么做. 这里和C++有很大的不同,GCC是一定默认生成构造函数的.</p>
+<h4 id="继承-inheritance"><a href="#继承-inheritance" class="headerlink" title="继承(inheritance)"></a>继承(inheritance)</h4><p>首先要明确的是, 为了避免cpp中多继承产生的很多问题, 在Java所有的继承都是<strong>单继承</strong>. 提到继承, 就必须要提类的访问权限控制.Java 一共有四种访问控制级别,如下表所示</p>
+<table>
+<thead>
+<tr>
+<th>修饰符</th>
+<th>当前类</th>
+<th>同一包</th>
+<th>子类（不同包）</th>
+<th>其他包</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>public</strong></td>
+<td>✅ 可访问</td>
+<td>✅ 可访问</td>
+<td>✅ 可访问</td>
+<td>✅ 可访问</td>
+<td>最宽松，所有地方都能访问</td>
+</tr>
+<tr>
+<td><strong>protected</strong></td>
+<td>✅ 可访问</td>
+<td>✅ 可访问</td>
+<td>✅ 可访问</td>
+<td>❌ 不可访问</td>
+<td>子类可以访问（即使在不同包），但普通外部类不行</td>
+</tr>
+<tr>
+<td>**(default)**无修饰符</td>
+<td>✅ 可访问</td>
+<td>✅ 可访问</td>
+<td>❌ 不可访问</td>
+<td>❌ 不可访问</td>
+<td>又叫 <strong>包级私有</strong>，同包内可见</td>
+</tr>
+<tr>
+<td><strong>private</strong></td>
+<td>✅ 可访问</td>
+<td>❌ 不可访问</td>
+<td>❌ 不可访问</td>
+<td>❌ 不可访问</td>
+<td>最严格，只能在本类中访问</td>
+</tr>
+</tbody></table>
+<p><strong>继承的使用时机:</strong></p>
+<p>在面向对象的课程中,老师都介绍过三种对象之间关系的概念:</p>
+<ul>
+<li>is-a : 代表着类与类之间是继承关系,这时就要使用<code>extends</code>或者<code>implements</code></li>
+<li>has-a: 代表着类与类之间是组合或者聚合关系,这个时候则是要在字段<code>feilds</code>中添加</li>
+<li>uses-a: 代表着类与类之间是一种依赖关系,这时经常出现在方法<code>method</code>的参数中,表示依赖</li>
+</ul>
+<p>三者的关联程度从高到低依次排序为: is-a; has-a; uses-a</p>
+<p>上面已经介绍了继承的具体使用时机</p>
+<p><strong>super</strong></p>
+<p>在Java中, super关键字代表这父类(超类), 和this关键字类似,可以使用super关键字访问父类的字段和方法. 需要注意是的在子类的构造函数中,首先一定会调用父类的构造函数,否则子类一定会构造失败. 很多时候并没有看见super()方法,这是因为<strong>父类如果有默认的构造函数,那么在子类中就不用声明,否则一定要使用父类的构造函数</strong></p>
+<p><strong>final</strong></p>
+<p>在Java中, final修饰符号可以用来修饰类, 方法, 变量</p>
+<ul>
+<li>final 修饰类 : 表示阻止继承, 不允许任何类继承这个类</li>
+<li>final 修饰方法 : 表示这个方法在继承之后不允许被重写</li>
+<li>final 修饰变量: 表示这个变量不允许被修改(和C++中的const一个作用,不过java中没有const)</li>
+</ul>
+<p>总之,在不同的场景下, final的意思略有不同,需要注意区分</p>
+<p><strong>向上转型和向下转型</strong></p>
+<ul>
+<li>向上转型: 显然向上转型是安全且一定成功的, 因为子类会继承父类所有的字段. 本质上向上转型是做了抽象,来满足OOP需求</li>
+<li>向下转型: 向下转型是不安全且不一定成功的, 向下转型一定要用 <code>instanceof</code> 判断</li>
+</ul>
+<h4 id="多态-Polymorphism"><a href="#多态-Polymorphism" class="headerlink" title="多态(Polymorphism)"></a>多态(Polymorphism)</h4><p>多态分为静态多态和动态多态, 也叫做编译期多态(函数重载 overload)和运行期多态(函数重写 override)</p>
+<ul>
+<li>函数重载: 函数名称要求必须一样, 返回值,参数要求可以不一样. 所有的函数重载都要写在一个类中</li>
+<li>函数重写: 函数名称,返回值参数要求必须一样</li>
+</ul>
+<p>静态多态是编译期决定的, 由编译器依据方法签名确定的；而动态多态,则是在运行时, 有JVM查找vtable来决定具体使用哪个方法</p>
+<h4 id="接口-interface-和抽象类-abstract-class"><a href="#接口-interface-和抽象类-abstract-class" class="headerlink" title="接口(interface)和抽象类(abstract class)"></a>接口(interface)和抽象类(abstract class)</h4><p>抽象类和接口的相同之处: </p>
+<ul>
+<li>两者都不能被实例化, 都是定义某种规范</li>
+<li>两者都能有抽象方法和非抽象方法, 不过接口中的非抽象方法一定是default的</li>
+</ul>
+<p>不同之处:</p>
+<ul>
+<li><strong>抽象类更适合描述高层抽象概念是规则的制定者；而接口更像是一种特性一种标签</strong>. 实现了这个接口的类就表明有了这个这个特性(比如cloneable, comparable). 正因为如此, 所以一个类可以实现多个接口. </li>
+<li>抽象类也是类,除了不能实例化, 它拥有类的所有功能</li>
+<li>接口则不一样, 在接口中所有声明的字段都是 <code>static final</code>属性的, 即使你并没有写<code>static final</code>标识符.(即不能字段是不能实例化的)</li>
+</ul>
+<p>总之, 抽象类和接口的界限不是很明显, 如果一个抽象类没有需要的实例字段, 就要声明为接口</p>
+<h4 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h4><p>Java的内部类分为三种: 内部类(innner class), 匿名类(anonymous class), 静态内部类(static Nested class)</p>
+<ul>
+<li><p>内部类: 内部类与普通类有个最大的不同，就是Inner Class的实例不能单独存在，必须依附于一个Outer Class的实例。同样的, 内部类隐式的持有一个Outer.this的指针, 用来访问外部类的字段</p>
+</li>
+<li><p>匿名类:匿名类不需要在Outer Class中明确地定义这个Class，而是在方法内部，通过匿名类（Anonymous Class）来定义.</p>
+<p>如下面两段代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;).start();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Queue&lt;String&gt; pq = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">Comparator</span>&lt;String&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(String s1, String s2)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> s1.length() - s2.length();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里的 Runnable 和 Comparator 都是接口, 显然接口是不能被实例化的, 这里就是使用了匿名类的方法</p>
+</li>
+<li><p>静态内部类: 静态内部类很特殊, 他可以不依附于外部的类, 便可以存在, 因此它无法访问到外部类的字段, 但是可以访问到外部类的<code>private</code>静态的字段和方法, 以及间接的使用new构建一个外部类实例. 这是一种破坏封装性的豁免. 静态内部类常用于复杂对象的构造,工具类等等. 以及用来实现单例模式(懒汉式).</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    * fields and methods</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton getInstance&#123;</span><br><span class="line">        <span class="keyword">return</span> Handler.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Handler</span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">Singleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="包-package-Jar-Classpath-模块-Module"><a href="#包-package-Jar-Classpath-模块-Module" class="headerlink" title="包(package), Jar, Classpath, 模块(Module)"></a>包(package), Jar, Classpath, 模块(Module)</h4><ul>
+<li><p>包 : 包的作用是实现命名空间的功能, 同时包也是default访问级别的访问边界. 通过包, 可以更好的组织类,来避免命名冲突.</p>
+</li>
+<li><p>Jar : 在java中, java程序的正确执行依赖.class能被jvm正确的识别到并且成功执行. 而jar包的作用就是管理分散在各层目录中的.class文件. 所以jar在jvm看来更像是一个目录. 通过ijar包可以灵活的部署代码</p>
+</li>
+<li><p>classpath: classpath的作用是告诉JVM 应该去哪里寻找程序正确执行所需要的class</p>
+</li>
+<li><p>模块: 模块则是在包的基础上, 在加上了一层封装, 这样可以控制哪些包可以对外暴露, 即只有export的包才可以访问其public属性, 否则即使是public也无法访问.</p>
+</li>
+</ul>
+<h3 id="Java的核心类介绍"><a href="#Java的核心类介绍" class="headerlink" title="Java的核心类介绍"></a>Java的核心类介绍</h3><p><strong>String, StringBuilder, StringBuffer, StringJoiner</strong>:</p>
+<p>这些类中, String 是无法修改的, 而 StringBuilder, StringBuffer是可以修改的, 前者是线程不安全而后者是线程安全的, StringJoiner则是用于字符串合并</p>
+<p><strong>包装类型</strong></p>
+<p>包装类型指的是Integer, Boolean这些类型, 它们是对基本数据类型的包装, 可以被置为null. 而对于包装的类型, 它们会自动发生装箱和拆箱, 这很影响效率. 并且包装类型的比较必须使用<code>equals()</code></p>
+<p><strong>JavaBean</strong></p>
+<p>名字上理解是咖啡豆, 实际上是一种特殊的类, 它专门为数据传输所设计. 他的所有的字段都是 private , 通过 public的 set和get方法来读写实例字段. 这样的类可以被成为JavaBean.</p>
+<p><strong>枚举类</strong></p>
+<p>这里和CPP类似, 传统的类中声明静态字段方法来枚举的话, 不具备每个枚举值的合法性. 因此特地的引入了枚举类. 首先Enum是无法被继承的, 然后枚举类编译器会对其值的合法性质做检查.</p>
+<p><strong>记录类</strong></p>
+<p>记录类是从Java 14之后引入的概念. 记录类的特点是 : 所有的字段都是 final 的, 一旦创建实例之后无法修改任何字段. 并且类的本身也是final的, 无法被继承. </p>
+<h3 id="Java的异常处理"><a href="#Java的异常处理" class="headerlink" title="Java的异常处理"></a>Java的异常处理</h3><p>在Java中, 使用异常来表示错误, 并且通过try…catch…来捕获异常. 在java中, 所有的异常都是通过继承Throwable类来实现的.整个异常的结构如下图所示</p>
+<img src="/img/java/Java_Throwable.png" alt="Java_Throwable" style="zoom:100%;" />
+
+<p>在上图中, Error是严重的错误, 比如内存耗尽, 栈溢出. 这些问题对于程序来说是无能为力的, 只能在终端查看backtrace的结果</p>
+<p>而Exception是运行时候出现的错误, 他可以被捕获并且去处理. 所有的Exception 都必须要被捕获并且去处理</p>
+<p>同时, 和异常处理所伴随的是日志, 在java标准库中提供了logging作为日志功能的基本实现. 同样的, 也有一些开源好用的日志库, 比如log4j, slf4j这些日志库.</p>
+<p>总而言之, <strong>使用日志和捕获异常是在编写大型项目很好的一个编程习惯. 一定要养成这样的习惯</strong></p>
+<h3 id="反射-Reflection"><a href="#反射-Reflection" class="headerlink" title="反射(Reflection)"></a>反射(Reflection)</h3><p>反射是Java很大的一个特性, 区别于CPP(不过听说CPP也要引入反射了…), 反射是Spring中AOP的基石</p>
+<h4 id="Class类"><a href="#Class类" class="headerlink" title="Class类"></a>Class类</h4><p>JVM为每个加载的<code>class</code>创建了对应的<code>Class</code>实例，并在实例中保存了该<code>class</code>的所有信息，包括类名、包名、父类、实现的接口、所有方法、字段等(这些信息也叫做)，因此，如果获取了某个<code>Class</code>实例，我们就可以通过这个<code>Class</code>实例获取到该实例对应的<code>class</code>的所有信息。通过<code>Class</code>实例获取<code>class</code>信息的方法称为反射（Reflection）</p>
+<p>每个实例都可以通过使用getClass()的方法来获取自身的Class实例</p>
+<p>在使用反射的时候,需要注意的是: <strong>Java是动态加载的, 只有在运行时jvm第一次读到这个类才会为这个类添加对应的Class类实例</strong></p>
+<h4 id="通过反射访问字段"><a href="#通过反射访问字段" class="headerlink" title="通过反射访问字段:"></a>通过反射访问字段:</h4><p><code>Class</code>类提供了以下几个方法来获取字段：</p>
+<ul>
+<li>Field getField(name)：根据字段名获取某个public的field（包括父类）</li>
+<li>Field getDeclaredField(name)：根据字段名获取当前类的某个field（不包括父类）</li>
+<li>Field[] getFields()：获取所有public的field（包括父类）</li>
+<li>Field[] getDeclaredFields()：获取当前类的所有field（不包括父类）</li>
+</ul>
+<p>需要注意的是, <strong>如果字段是private的, 表明是受访问权限保护不可修改的. 那么需要使用<code>setAccessible</code>来破坏其封装性</strong></p>
+<h4 id="通过反射调用方法"><a href="#通过反射调用方法" class="headerlink" title="通过反射调用方法:"></a>通过反射调用方法:</h4><p>可以通过<code>Class</code>实例获取所有<code>Method</code>信息。<code>Class</code>类提供了以下几个方法来获取<code>Method</code>：</p>
+<ul>
+<li><code>Method getMethod(name, Class...)</code>：获取某个<code>public</code>的<code>Method</code>（包括父类）</li>
+<li><code>Method getDeclaredMethod(name, Class...)</code>：获取当前类的某个<code>Method</code>（不包括父类）</li>
+<li><code>Method[] getMethods()</code>：获取所有<code>public</code>的<code>Method</code>（包括父类）</li>
+<li><code>Method[] getDeclaredMethods()</code>：获取当前类的所有<code>Method</code>（不包括父类）</li>
+</ul>
+<p>需要注意的是, 如果方法是private的, 那么和字段一样,需要使用<code>setAccessible</code>来破坏其封装性. </p>
+<p>调用反射需要使用<code>invoke(Object instance, Object... parameters)</code>, 注意, 对于<strong>反射调用的非静态方法一定是依赖于实例的,而静态方法则只要传入null作为第一个参数即可</strong></p>
+<h4 id="通过反射调用构造方法"><a href="#通过反射调用构造方法" class="headerlink" title="通过反射调用构造方法:"></a>通过反射调用构造方法:</h4><p>同样, 也可以通过Class实例去获取类的构造方法</p>
+<ul>
+<li><code>getConstructor(Class...)</code>：获取某个<code>public</code>的<code>Constructor</code>；</li>
+<li><code>getDeclaredConstructor(Class...)</code>：获取某个<code>Constructor</code>；</li>
+<li><code>getConstructors()</code>：获取所有<code>public</code>的<code>Constructor</code>；</li>
+<li><code>getDeclaredConstructors()</code>：获取所有<code>Constructor</code>。</li>
+</ul>
+<p>通过获取的<code>construction</code>对象, 调用其<code>newInstance</code>方法即可按照指定构造函数创造实例</p>
+<h4 id="获取继承关系"><a href="#获取继承关系" class="headerlink" title="获取继承关系"></a>获取继承关系</h4><ul>
+<li>获取父类的Class : <code>getSuperclass()</code>: 获取某个Class类型的父类的Class实例</li>
+<li>获取实现的Interface: <code>getInterfaces()</code>: 获取某个Class类型所实现的所有接口的Class 实例</li>
+<li>判断继承关系: <ul>
+<li>判断一个实例是否是某个类型时，使用<code>instanceof</code>操作符</li>
+<li>判断两个<code>Class</code>实例中,有一个向上转型是否成立,使用<code>isAssignableFrom()</code>操作</li>
+</ul>
+</li>
+</ul>
+<h3 id="注解-Annotation"><a href="#注解-Annotation" class="headerlink" title="注解(Annotation)"></a>注解(Annotation)</h3><p>Java 注解是一种 <strong>元数据机制</strong>，它的作用是 <strong>在编译期或运行时向工具或框架提供额外信息</strong>，从而实现 <strong>编译检查、代码生成、运行时依赖注入&#x2F;映射、文档生成</strong> 等功能。</p>
+<h4 id="定义注解"><a href="#定义注解" class="headerlink" title="定义注解"></a>定义注解</h4><ul>
+<li><code>@Tareget</code>:定义<code>Annotation</code>能够被应用于源码的哪些位置: 类, 方法, 字段, 参数等等</li>
+<li><code>@Retention</code>:定义<code>Annotation</code>的生命周期, 仅编译期, 仅Class文件, 运行期</li>
+<li><code>@Repeatable</code>:使用<code>@Repeatable</code>这个元注解可以定义<code>Annotation</code>是否可重复</li>
+<li><code>@Inherited</code>:使用<code>@Inherited</code>定义子类是否可继承父类定义的<code>Annotation</code></li>
+</ul>
+<p>这里给出一个定义注解的实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.TYPE)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Report &#123;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">type</span><span class="params">()</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">    String <span class="title function_">level</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;info&quot;</span>;</span><br><span class="line">    String <span class="title function_">value</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="处理注解"><a href="#处理注解" class="headerlink" title="处理注解"></a>处理注解</h4><p>之前提到过, 注解需要在编译期或运行时向工具提供额外信息, 这就需要反射的机制. 因此, Java通过反射来处理注解</p>
+<ul>
+<li>Class.getAnnotation(Class)</li>
+<li>Field.getAnnotation(Class)</li>
+<li>Method.getAnnotation(Class)</li>
+<li>Constructor.getAnnotation(Class)</li>
+</ul>
+<p>不过, 如果需要使用反射来读取类型, 那么注解的生命周期要选为运行时</p>
+<h3 id="泛型-Generics"><a href="#泛型-Generics" class="headerlink" title="泛型(Generics)"></a>泛型(Generics)</h3><p>在Java中, 泛型可以概括为, 通过编写一个模板代码来进行任意类型的适配, 是一种多态的体现. 与CPP中的模板不同, CPP的模板能力更为强大, 它能在编译期展开并且根据传入的类型生成不同的实例. 而在Java中, 编译时会检查泛型的类型安全，但在 <strong>编译后的字节码中泛型类型信息会被擦除</strong>. 及在JVM看来, <code>List&lt;Integer&gt; </code>和<code>List&lt;String&gt;</code>其实是同一个类 <code>List</code>(没有类型参数的原始)，只是编译阶段保证你不会把错误的类型放进去。</p>
+<h4 id="编写和使用泛型"><a href="#编写和使用泛型" class="headerlink" title="编写和使用泛型"></a>编写和使用泛型</h4><p>在使用泛型的时候, 必须将T替换为所需要的class类型. 注意, 这里的T只能是引用类型, 因此不能是int这种基本类型. 因为Java泛型的实现基础是类型擦除, 而 int 不用继承 Object类实现. </p>
+<p>在编写泛型的时候, 需要注意的是<strong>静态方法不能直接引用泛型类型T, 必须定义其它的类型.</strong> 也很好理解, 静态的方法和类是否实例化是无关的</p>
+<h4 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h4><p>类型擦出是泛型的底层实现, 其实JVM对泛型一无所知, 因为在编译期间, 编译器通过类型擦除将所有的泛型安全的转化为别的类型. </p>
+<p>比如下面是一段泛型代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Box</span>&lt;T&gt; &#123;</span><br><span class="line">    T value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Box</span>&lt;T <span class="keyword">extends</span> <span class="title class_">Number</span>&gt; &#123;</span><br><span class="line">    T value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T <span class="keyword">extends</span> <span class="title class_">Comparable</span>&lt;T&gt;&gt; T <span class="title function_">min</span><span class="params">(T a, T b)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a.compareTo(b) &lt;= <span class="number">0</span> ? a : b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>而在经过类型擦除之后, 结果是:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Box</span> &#123;</span><br><span class="line">    Object value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Box</span> &#123;</span><br><span class="line">    Number value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Comparable <span class="title function_">min</span><span class="params">(Comparable a, Comparable b)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a.compareTo(b) &lt;= <span class="number">0</span> ? a : b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>显然, 下面这段代码在JVM看来是没有任何泛型的信息</p>
+<p>类型擦除的影响</p>
+<ul>
+<li>运行时没有泛型信息:</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list1 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">List&lt;Integer&gt; list2 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">System.out.println(list1.getClass() == list2.getClass()); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>不能直接创建泛型数组: 运行时JVM是无法区分 <code>List&lt;String&gt;</code> 和 <code>List&lt;Integer&gt;</code> 的数组</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt;[] array = <span class="keyword">new</span> <span class="title class_">List</span>&lt;String&gt;[<span class="number">10</span>]; <span class="comment">//  编译错误</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>不能用泛型做<code>instanceof</code>判断</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> List&lt;String&gt;) &#123; &#125; <span class="comment">// 编译错误</span></span><br><span class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> List&lt;?&gt;) &#123; &#125; <span class="comment">// 编译通过</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>反射需要用Type来获取精确的泛型消息</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list1 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">Class&lt;?&gt; cls = list1.getClass(); <span class="comment">// 得到的是ArrayList类型</span></span><br><span class="line"><span class="type">Field</span> <span class="variable">f</span> <span class="operator">=</span> YourClass.class.getDeclaredField(<span class="string">&quot;list1&quot;</span>); <span class="comment">//YourClass就是包含list1这个字段的类</span></span><br><span class="line"><span class="type">Type</span> <span class="variable">cls_generic</span> <span class="operator">=</span> f.getGenericType(); <span class="comment">// 拿到 List&lt;String&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="PECS原则"><a href="#PECS原则" class="headerlink" title="PECS原则"></a>PECS原则</h4><p>何时使用<code>extends</code>，何时使用<code>super</code>？为了便于记忆,因此产生了PECS原则：Producer Extends Consumer Super。即：如果需要返回<code>T</code>，它是生产者（Producer），要使用<code>extends</code>通配符；如果需要写入<code>T</code>，它是消费者（Consumer），要使用<code>super</code>通配符</p>
+<h3 id="集合-Collections"><a href="#集合-Collections" class="headerlink" title="集合(Collections)"></a>集合(Collections)</h3><p>Java 的集合（Collection）是对一组对象进行存储、操作的容器类库，位于 <code>java.util</code> 包中。它们主要用来 <strong>代替数组</strong>，解决数组固定大小、操作不灵活的问题。</p>
+<p>集合分为三大类：</p>
+<ol>
+<li><strong>Collection 接口</strong>（存放单个元素）<ul>
+<li><code>List</code>：有序、可重复</li>
+<li><code>Set</code>：无序、不可重复</li>
+<li><code>Queue</code> &#x2F; <code>Deque</code>：队列&#x2F;双端队列</li>
+</ul>
+</li>
+<li><strong>Map 接口</strong>（存放键值对 <code>key-value</code>）<ul>
+<li>不能直接继承 <code>Collection</code>，但也属于集合框架的一部分</li>
+</ul>
+</li>
+<li><strong>工具类</strong><ul>
+<li><code>Collections</code>：操作集合的工具类（排序、搜索、线程安全化等）</li>
+<li><code>Arrays</code>：操作数组的工具类（与集合转换）</li>
+</ul>
+</li>
+</ol>
+<p>下面是集合的大分类</p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">Iterable</span></span><br><span class="line">└─ <span class="variable">Collection</span></span><br><span class="line">   ├─ <span class="variable">AbstractCollection</span></span><br><span class="line">   ├─ <span class="built_in">List</span></span><br><span class="line">   │  ├─ <span class="variable">AbstractList</span></span><br><span class="line">   │  │  └─ <span class="variable">AbstractSequentialList</span></span><br><span class="line">   │  ├─ <span class="variable">ArrayList</span></span><br><span class="line">   │  ├─ <span class="variable">LinkedList</span> <span class="punctuation">(</span>也实现 <span class="variable">Deque</span><span class="punctuation">)</span></span><br><span class="line">   │  ├─ <span class="variable">Vector</span> <span class="punctuation">(</span>遗留<span class="operator">,</span> 同步<span class="punctuation">)</span></span><br><span class="line">   │  │  └─ <span class="built_in">Stack</span> <span class="punctuation">(</span>遗留<span class="operator">,</span> <span class="variable">LIFO</span><span class="punctuation">)</span></span><br><span class="line">   │  └─ <span class="variable">CopyOnWriteArrayList</span> <span class="punctuation">(</span>并发<span class="operator">,</span> 读多写少<span class="punctuation">)</span></span><br><span class="line">   │</span><br><span class="line">   ├─ <span class="built_in">Set</span></span><br><span class="line">   │  ├─ <span class="variable">AbstractSet</span></span><br><span class="line">   │  ├─ <span class="variable">HashSet</span></span><br><span class="line">   │  │  └─ <span class="variable">LinkedHashSet</span></span><br><span class="line">   │  ├─ <span class="variable">TreeSet</span> <span class="punctuation">(</span><span class="variable">NavigableSet</span><span class="operator">/</span><span class="variable">SortedSet</span><span class="punctuation">)</span></span><br><span class="line">   │  └─ <span class="variable">EnumSet</span> <span class="punctuation">(</span>抽象父类<span class="operator">+</span>具体子类<span class="operator">,</span> 位图<span class="punctuation">)</span></span><br><span class="line">   │</span><br><span class="line">   └─ <span class="variable">Queue</span></span><br><span class="line">      ├─ <span class="variable">AbstractQueue</span></span><br><span class="line">      ├─ <span class="variable">Deque</span> <span class="punctuation">(</span>接口<span class="punctuation">)</span></span><br><span class="line">      │  ├─ <span class="variable">ArrayDeque</span></span><br><span class="line">      │  └─ <span class="variable">LinkedList</span></span><br><span class="line">      ├─ <span class="variable">PriorityQueue</span> <span class="punctuation">(</span>最小堆<span class="punctuation">)</span></span><br><span class="line">      │</span><br><span class="line">      ├─ <span class="variable">BlockingQueue</span> <span class="punctuation">(</span>接口<span class="operator">,</span> 并发<span class="punctuation">)</span></span><br><span class="line">      │  ├─ <span class="variable">ArrayBlockingQueue</span></span><br><span class="line">      │  ├─ <span class="variable">LinkedBlockingQueue</span></span><br><span class="line">      │  ├─ <span class="variable">PriorityBlockingQueue</span></span><br><span class="line">      │  ├─ <span class="variable">DelayQueue</span></span><br><span class="line">      │  ├─ <span class="variable">SynchronousQueue</span></span><br><span class="line">      │  └─ <span class="variable">LinkedTransferQueue</span> <span class="punctuation">(</span>也实现 <span class="variable">TransferQueue</span><span class="punctuation">)</span></span><br><span class="line">      │</span><br><span class="line">      └─ <span class="variable">BlockingDeque</span> <span class="punctuation">(</span>接口<span class="operator">,</span> 并发<span class="operator">;</span> 也继承 <span class="variable">Deque</span><span class="operator">/</span><span class="variable">BlockingQueue</span><span class="punctuation">)</span></span><br><span class="line">         └─ <span class="variable">LinkedBlockingDeque</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Map</span>  <span class="punctuation">(</span>不继承 <span class="variable">Collection</span><span class="punctuation">)</span></span><br><span class="line">├─ <span class="variable">AbstractMap</span></span><br><span class="line">├─ <span class="variable">HashMap</span></span><br><span class="line">│  └─ <span class="variable">LinkedHashMap</span></span><br><span class="line">├─ <span class="built_in">TreeMap</span> <span class="punctuation">(</span><span class="variable">NavigableMap</span><span class="operator">/</span><span class="variable">SortedMap</span><span class="operator">;</span> 红黑树<span class="punctuation">)</span></span><br><span class="line">├─ <span class="variable">EnumMap</span> <span class="punctuation">(</span>键为枚举<span class="punctuation">)</span></span><br><span class="line">├─ <span class="variable">WeakHashMap</span> <span class="punctuation">(</span>键弱引用<span class="operator">,</span> 缓存<span class="punctuation">)</span></span><br><span class="line">├─ <span class="variable">IdentityHashMap</span> <span class="punctuation">(</span>键用<span class="operator">==</span>比较<span class="punctuation">)</span></span><br><span class="line">├─ <span class="variable">Hashtable</span> <span class="punctuation">(</span>遗留<span class="operator">,</span> 同步<span class="punctuation">)</span></span><br><span class="line">│  └─ <span class="built_in">Properties</span> <span class="punctuation">(</span>键<span class="operator">/</span>值为 <span class="built_in">String</span><span class="operator">,</span> 配置<span class="punctuation">)</span></span><br><span class="line">│</span><br><span class="line">├─ <span class="variable">ConcurrentMap</span> <span class="punctuation">(</span>接口<span class="operator">,</span> 并发<span class="punctuation">)</span></span><br><span class="line">│  └─ <span class="variable">ConcurrentHashMap</span></span><br><span class="line">│</span><br><span class="line">└─ <span class="variable">ConcurrentNavigableMap</span> <span class="punctuation">(</span>接口<span class="operator">,</span> 并发<span class="operator">+</span>可导航<span class="punctuation">)</span></span><br><span class="line">   └─ <span class="variable">ConcurrentSkipListMap</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是,在使用这些collections的时候, 对放入集合的元素有着如下的要求:</p>
+<p><strong>哈希类集合（HashMap&#x2F;HashSet 等）依赖 <code>equals</code> 和 <code>hashCode</code></strong></p>
+<p><strong>有序&#x2F;排序集合（TreeMap&#x2F;TreeSet 等）依赖 <code>Comparable</code> 或 <code>Comparator</code></strong></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Java语言基础</p><p><a href="https://kosa-as.github.io/2026/01/04/java/Java语言基础/">https://kosa-as.github.io/2026/01/04/java/Java语言基础/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>kosa-as</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2026-01-04</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2026-01-04</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4/">类型擦除</a><a class="link-muted mr-2" rel="tag" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/">面向对象编程</a></div><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a><a class="a2a_button_facebook"></a><a class="a2a_button_twitter"></a><a class="a2a_button_telegram"></a><a class="a2a_button_whatsapp"></a><a class="a2a_button_reddit"></a></div><script src="https://static.addtoany.com/menu/page.js" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2026/01/04/cpp/C++%E8%AF%AD%E8%A8%80%E8%BF%90%E8%A1%8C%E6%9C%9F%E7%9A%84%E5%BC%BA%E5%8C%96/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">C++语言运行期的强化</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2026/01/04/cpp/C++%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"><span class="level-item">C++智能指针和内存管理</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div id="comment-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+            id: "1712e7ec9e3dc728a28bcf1945853997",
+            repo: "kosa-as.github.io",
+            owner: "kosa-as",
+            clientID: "3b2bef5e46e6c8df3949",
+            clientSecret: "842d82f5dfdd26dc2821298dc2b426e9dede463e",
+            admin: ["kosa-as"],
+            createIssueManually: false,
+            distractionFreeMode: false,
+            perPage: 10,
+            pagerDirection: "last",
+            
+            
+            enableHotKey: true,
+            
+        })
+        gitalk.render('comment-container')</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.jpg" alt="wwh66258"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">wwh66258</p><p class="is-size-6 is-block">Software Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>上海 普陀</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">20</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">10</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">43</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/kosa-as" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/kosa-as"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/C/"><span class="level-start"><span class="level-item">C++</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile" href="/categories/Java/"><span class="level-start"><span class="level-item">Java</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/STL/"><span class="level-start"><span class="level-item">STL</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E4%BA%91/"><span class="level-start"><span class="level-item">云</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E4%BA%91%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83/"><span class="level-start"><span class="level-item">云数据中心</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="level-start"><span class="level-item">博客搭建</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/"><span class="level-start"><span class="level-item">前端开发</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">操作系统</span></span><span class="level-end"><span class="level-item tag">3</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Linux的内存</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E5%86%85%E6%A0%B8%E5%90%8C%E6%AD%A5/">Linux的内核同步</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%92%8C%E4%BF%A1%E5%8F%B7/">Linux的系统调用和信号</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/%E7%94%A8hexo+icarus%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">用hexo+icarus搭建个人博客</a></p><p class="categories"><a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a> / <a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.546Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">Linux中的文件系统</a></p><p class="categories"><a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2026/01/"><span class="level-start"><span class="level-item">一月 2026</span></span><span class="level-end"><span class="level-item tag">17</span></span></a></li><li><a class="level is-mobile" href="/archives/2025/02/"><span class="level-start"><span class="level-item">二月 2025</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/C-%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/"><span class="tag">C++关键字解析</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C-%E6%8C%87%E9%92%88/"><span class="tag">C++指针</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/"><span class="tag">C++语言特性</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GitHub-Pages/"><span class="tag">GitHub Pages</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Gitalk/"><span class="tag">Gitalk</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/IO/"><span class="tag">IO</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Icarus/"><span class="tag">Icarus</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OLAP/"><span class="tag">OLAP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OLTP/"><span class="tag">OLTP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RAII/"><span class="tag">RAII</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/SFINAE/"><span class="tag">SFINAE</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/STL/"><span class="tag">STL</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Template/"><span class="tag">Template</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/k8s/"><span class="tag">k8s</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/"><span class="tag">lambda表达式</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%B8%AD%E6%96%AD/"><span class="tag">中断</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80/"><span class="tag">内存寻址</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"><span class="tag">内存管理</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%90%8C%E6%AD%A5/"><span class="tag">同步</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC/"><span class="tag">左值右值</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/"><span class="tag">并发编程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%B6%E8%A1%8C/"><span class="tag">并行</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%82%E5%B8%B8/"><span class="tag">异常</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%82%E6%AD%A5/"><span class="tag">异步</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%95%E7%94%A8/"><span class="tag">引用</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="tag">操作系统</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/"><span class="tag">数据仓库</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E6%B9%96/"><span class="tag">数据湖</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F/"><span class="tag">数据系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"><span class="tag">文件系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9E%84%E9%80%A0%E9%A1%BA%E5%BA%8F/"><span class="tag">构造顺序</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D/"><span class="tag">模板匹配</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B9%96%E4%BB%93%E4%B8%80%E4%BD%93/"><span class="tag">湖仓一体</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4/"><span class="tag">类型擦除</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"><span class="tag">编译原理</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="tag">设计模式</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6%E7%89%B9%E6%80%A7/"><span class="tag">运行时特性</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/"><span class="tag">进程描述符</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/"><span class="tag">面向对象编程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%A1%B5%E8%A1%A8/"><span class="tag">页表</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="kosa-as" height="28"></a><p class="is-size-7"><span>&copy; 2026 kosa-as</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

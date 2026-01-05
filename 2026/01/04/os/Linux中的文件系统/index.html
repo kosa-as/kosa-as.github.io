@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Linux中的文件系统 - kosa-as</title><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="3273dc"><meta name="application-name" content="kosa-as"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="msapplication-TileColor" content="3273dc"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="kosa-as"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="本文回顾了本科时候的操作系统课程，同时加入了一些自己对Linux中的文件系统的理解"><meta property="og:type" content="blog"><meta property="og:title" content="Linux中的文件系统"><meta property="og:url" content="https://kosa-as.github.io/2026/01/04/os/Linux%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"><meta property="og:site_name" content="kosa-as"><meta property="og:description" content="本文回顾了本科时候的操作系统课程，同时加入了一些自己对Linux中的文件系统的理解"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://kosa-as.github.io/img/og_image.png"><meta property="article:published_time" content="2026-01-04T09:16:20.546Z"><meta property="article:modified_time" content="2026-01-04T09:16:20.546Z"><meta property="article:author" content="kosa-as"><meta property="article:tag" content="文件系统"><meta property="article:tag" content="IO"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://kosa-as.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://kosa-as.github.io/2026/01/04/os/Linux%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"},"headline":"Linux中的文件系统","image":["https://kosa-as.github.io/img/og_image.png"],"datePublished":"2026-01-04T09:16:20.546Z","dateModified":"2026-01-04T09:16:20.546Z","author":{"@type":"Person","name":"kosa-as"},"publisher":{"@type":"Organization","name":"kosa-as","logo":{"@type":"ImageObject","url":"https://kosa-as.github.io/img/logo.png"}},"description":"本文回顾了本科时候的操作系统课程，同时加入了一些自己对Linux中的文件系统的理解"}</script><link rel="canonical" href="https://kosa-as.github.io/2026/01/04/os/Linux%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.0.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="kosa-as" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/kosa-as"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2026-01-04T09:16:20.546Z" title="2026/1/4 17:16:20">2026-01-04</time>发表</span><span class="level-item"><time dateTime="2026-01-04T09:16:20.546Z" title="2026/1/4 17:16:20">2026-01-04</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span><span class="level-item">17 分钟读完 (大约2544个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Linux中的文件系统</h1><div class="content"><!-- more -->
+
+<h2 id="Linux文件系统的设计初衷"><a href="#Linux文件系统的设计初衷" class="headerlink" title="Linux文件系统的设计初衷"></a>Linux文件系统的设计初衷</h2><pre><code>Linux操作系统中，有个很显著的特点就是：所有的IO对象都被抽象为文件，如果要进行IO操作，那么则通过调用Linux的虚拟文件系统提供的`open` 、`write `、`read`一系列接口，来到具体的IO块设备中使用设备驱动来实现。总而言之，就是Linux提供了一个内核层的软件，即虚拟文件系统，来提供所有的IO操作。
+</code></pre>
+<h2 id="Linux虚拟文件系统支持的文件系统"><a href="#Linux虚拟文件系统支持的文件系统" class="headerlink" title="Linux虚拟文件系统支持的文件系统"></a>Linux虚拟文件系统支持的文件系统</h2><h3 id="磁盘文件系统"><a href="#磁盘文件系统" class="headerlink" title="磁盘文件系统"></a>磁盘文件系统</h3><p>磁盘文件系统是用来管理本地磁盘的存储空间，或者其他可以起到磁盘作用的存储设备(U盘)。</p>
+<p>Linux可以很好的支持对各种类型的文件系统的磁盘的访问，比如Linux使用的Ex4（第四拓展文件系统），Windows使用的NTFS以及 UNIX家族的各种操作系统</p>
+<h3 id="网络文件系统"><a href="#网络文件系统" class="headerlink" title="网络文件系统"></a>网络文件系统</h3><p>网络文件系统是一种通过 VFS 把远程存储挂载到本地目录树的技术，本质是“文件系统驱动 + 网络协议”，它让应用像操作本地文件一样去读写远程数据。常见的RPC技术就是访问远程的网络文件系统的方式</p>
+<h3 id="特殊文件系统"><a href="#特殊文件系统" class="headerlink" title="特殊文件系统"></a>特殊文件系统</h3><p>特殊文件系统是 Linux 内核中不依赖磁盘的文件系统实现，它通过 VFS 提供统一的文件操作接口，但数据直接来自内存或内核数据结构，常用于系统信息、配置接口和临时存储。</p>
+<p>常见的特殊文件系统介绍：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>挂载点</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>procfs</strong></td>
+<td><code>/proc</code></td>
+<td>提供进程、内核状态信息（<code>/proc/cpuinfo</code>、<code>/proc/meminfo</code>）</td>
+</tr>
+<tr>
+<td><strong>sysfs</strong></td>
+<td><code>/sys</code></td>
+<td>反映内核对象（设备、驱动、总线等）的层次结构</td>
+</tr>
+<tr>
+<td><strong>tmpfs</strong></td>
+<td>任意挂载点（常见 <code>/run</code>、<code>/dev/shm</code>）</td>
+<td>内存中的临时存储，可当 RAM Disk 用</td>
+</tr>
+<tr>
+<td><strong>devtmpfs</strong></td>
+<td><code>/dev</code></td>
+<td>自动创建设备节点</td>
+</tr>
+<tr>
+<td><strong>sockfs</strong></td>
+<td>内核内部使用</td>
+<td>为 socket 提供 VFS 接口</td>
+</tr>
+<tr>
+<td><strong>pipefs</strong></td>
+<td>内核内部使用</td>
+<td>管道&#x2F;匿名管道实现</td>
+</tr>
+<tr>
+<td><strong>configfs</strong></td>
+<td><code>/sys/kernel/config</code></td>
+<td>允许用户空间创建和配置内核对象</td>
+</tr>
+</tbody></table>
+<h2 id="虚拟文件系统中的数据结构"><a href="#虚拟文件系统中的数据结构" class="headerlink" title="虚拟文件系统中的数据结构"></a>虚拟文件系统中的数据结构</h2><h3 id="superblock"><a href="#superblock" class="headerlink" title="superblock"></a>superblock</h3><p>超级块是存放在磁盘上文件系统开头的一小块（通常在引导块之后），同时内存中也会有一份副本用于运行时访问。它是文件系统的“元信息（metadata）”，描述了整个文件系统的布局和关键参数。内核在挂载（mount）文件系统时，会读取超级块，将里面的参数加载到内存，用来指导后续的目录、inode、数据块的管理。</p>
+<p><strong>superblock 的主要内容：</strong></p>
+<ul>
+<li><p><strong>文件系统基本信息</strong></p>
+<ul>
+<li>魔数（magic number）：标识文件系统类型，防止挂载错误的分区。</li>
+<li>文件系统大小：总共有多少块（blocks）。</li>
+<li>block 大小（一般 1KB、2KB、4KB）。</li>
+<li>inode 总数。</li>
+</ul>
+</li>
+<li><p><strong>文件系统布局信息</strong></p>
+<ul>
+<li>inode 表起始位置、数量。</li>
+<li>数据块区域起始位置、数量。</li>
+<li>位图（block bitmap &#x2F; inode bitmap）位置。</li>
+</ul>
+</li>
+<li><p><strong>一致性与日志相关信息</strong></p>
+<ul>
+<li>log 区域（用于 journaling 文件系统，比如 ext3&#x2F;ext4 的 journal）。</li>
+<li>最近挂载时间、写入时间。</li>
+<li>是否被 cleanly unmount。</li>
+</ul>
+</li>
+<li><p><strong>运行时信息（仅内存态 superblock 保存）</strong></p>
+<ul>
+<li>挂载点引用计数。</li>
+<li>指向 inode 缓存、dentry 缓存的指针。</li>
+<li>同步&#x2F;锁机制。</li>
+</ul>
+</li>
+</ul>
+<p>简单地说，superblock 就是文件系统的“元信息控制中心”，它告诉操作系统如何解释磁盘上的数据，确保文件系统能被正确挂载、管理和维护。</p>
+<h3 id="索引节点对象（inode）"><a href="#索引节点对象（inode）" class="headerlink" title="索引节点对象（inode）"></a>索引节点对象（inode）</h3><p>inode是文件系统中用来描述一个文件的 <strong>元数据结构</strong> 。每一个文件（普通文件、目录、符号链接、设备文件等）都有一个 inode。inode  <strong>不存储文件名</strong> ，而是存储文件的属性和指向数据块的指针。</p>
+<p><strong>inode 中包含的主要信息</strong></p>
+<ul>
+<li><strong>文件属性（metadata）</strong></li>
+<li>文件类型（普通文件、目录、符号链接、字符设备、块设备…）</li>
+<li>权限（rwx）</li>
+<li>所属用户 ID (UID)、组 ID (GID)</li>
+<li>文件大小（bytes）</li>
+<li>时间戳（atime&#x2F;mtime&#x2F;ctime）</li>
+<li>链接计数（多少个目录项指向该 inode）</li>
+<li><strong>数据块位置</strong></li>
+<li><strong>直接块指针</strong> （direct blocks）：直接指向数据块。</li>
+<li><strong>间接块指针</strong> （indirect blocks）：指向一个块，这个块里再存放更多数据块地址。</li>
+<li><strong>二级&#x2F;三级间接块指针</strong> （large file 才需要）。</li>
+</ul>
+<h3 id="文件对象（file）"><a href="#文件对象（file）" class="headerlink" title="文件对象（file）"></a>文件对象（file）</h3><p>在 Linux 内核中，<strong>文件对象（file object）</strong> 就是 <code>struct file</code> 结构体。它并不是“磁盘上的实体”，而是  <strong>进程在打开文件时，内核为该打开实例创建的内存对象</strong> 。可以说，文件对象是站在进程的角度所设计出来的，它表示进程打开该文件的一次实例（动态的，运行时信息）</p>
+<p><strong>file中包含的主要信息</strong></p>
+<ul>
+<li><p><strong>路径 &amp; inode</strong></p>
+<ul>
+<li><code>f_path</code>：指向 dentry（目录项）和挂载点，用于路径解析</li>
+<li><code>f_inode</code>：快速访问 inode（文件的元数据）</li>
+</ul>
+</li>
+<li><p><strong>操作方法</strong></p>
+<ul>
+<li><code>f_op</code>：指向一组函数指针（<code>struct file_operations</code>），定义了 read&#x2F;write&#x2F;ioctl&#x2F;mmap 等操作的具体实现</li>
+<li>不同文件系统会注册自己的操作集，比如 ext4、procfs、sockfs</li>
+</ul>
+</li>
+<li><p><strong>运行时状态</strong></p>
+<ul>
+<li><code>f_flags</code>：打开时传入的 flag（如 O_APPEND、O_NONBLOCK）</li>
+<li><code>f_mode</code>：读写模式（FMODE_READ, FMODE_WRITE）</li>
+<li><code>f_pos</code>：文件读写指针（当前偏移量）</li>
+</ul>
+</li>
+<li><p><strong>引用计数和同步</strong></p>
+<ul>
+<li><code>f_count</code>：多少个 fd 指向这个 file 对象（<code>dup</code>、<code>fork</code> 时会增加）</li>
+<li><code>f_lock</code>：保护并发访问</li>
+</ul>
+</li>
+<li><p><strong>缓存和私有数据</strong></p>
+<ul>
+<li><code>f_mapping</code>：指向页缓存，用于文件和内存的映射</li>
+<li><code>private_data</code>：给具体文件系统或设备驱动使用（例如 socket 就会存 socket 的内部结构体）</li>
+</ul>
+</li>
+</ul>
+<p>有时候很容易混淆inode和file，简而言之，<code>inode</code> 描述文件是什么，<code>file</code> 描述“我这次打开它怎么用”</p>
+<h3 id="目录项对象（dentry）"><a href="#目录项对象（dentry）" class="headerlink" title="目录项对象（dentry）"></a>目录项对象（dentry）</h3><p><strong>dentry（directory entry，目录项对象）</strong> 是 VFS 用来表示 <strong>路径名的一部分（目录项）</strong> 的内存对象。它的作用是把 <strong>文件名</strong> 和 <strong>inode</strong> 关联起来。需要注意的是：<strong>磁盘上存储目录项地方是目录文件的数据块，内存中对应的运行时抽象就是 dentry。</strong></p>
+<p><strong>dentry中包含的主要信息</strong></p>
+<ul>
+<li><p><strong>名字信息</strong></p>
+<ul>
+<li><code>d_name</code>：文件名（含长度和哈希值，便于快速查找）</li>
+<li><code>d_parent</code>：指向父目录的 dentry（形成目录树）</li>
+</ul>
+</li>
+<li><p><strong>层级关系</strong></p>
+<ul>
+<li><code>d_subdirs</code>：子目录链表</li>
+<li>支持在内存里维护完整的目录树结构</li>
+</ul>
+</li>
+<li><p><strong>关联文件系统对象</strong></p>
+<ul>
+<li><code>d_inode</code>：指向对应的 inode</li>
+<li><code>d_sb</code>：指向所属的超级块</li>
+</ul>
+</li>
+<li><p><strong>缓存与引用</strong></p>
+<ul>
+<li><code>d_hash</code>：放入哈希表（dcache）中，用于快速查找路径</li>
+<li><code>d_count</code>：引用计数（多少个进程&#x2F;内核对象正在用这个 dentry）</li>
+<li><code>d_flags</code>：标记 dentry 状态（是否有效、是否负向等）</li>
+</ul>
+</li>
+</ul>
+<p><strong>目录项缓存(<strong>dentry cache</strong> ，简称 <strong>dcache</strong>)</strong></p>
+<p>dcache是 Linux VFS（虚拟文件系统）中非常重要的一部分。它的主要作用是： <strong>加速路径名解析，避免重复的磁盘访问和 inode 查找</strong> 。</p>
+<p><strong>目录项缓存的作用</strong></p>
+<ul>
+<li><strong>路径名到 inode 的快速映射</strong><ul>
+<li>dentry 保存了目录名（比如 <code>docs</code>）与其对应 inode 的关系。</li>
+<li>下次访问相同路径时可以直接从缓存获取 inode，而不用重新从磁盘读取。</li>
+</ul>
+</li>
+<li><strong>加速路径解析</strong><ul>
+<li>路径解析是逐级查找的，dcache 缓存了父目录到子目录&#x2F;文件的映射，避免重复查找。</li>
+<li>例如多次访问 <code>/home/user/docs/</code>，后续只需查缓存。</li>
+</ul>
+</li>
+<li><strong>支持硬链接和别名</strong><ul>
+<li>dentry 允许同一个 inode 被多个不同的目录项引用，帮助 VFS 处理硬链接。</li>
+</ul>
+</li>
+<li><strong>减少磁盘 I&#x2F;O</strong><ul>
+<li>频繁打开、关闭文件时，通常 inode 和目录项都已经在缓存中，不需要再次读磁盘。</li>
+</ul>
+</li>
+<li><strong>配合 inode cache</strong><ul>
+<li>dentry 只缓存 “路径 → inode 的映射”，而 inode cache 保存 “inode 号 → inode 对象”。</li>
+<li>两者结合起来，VFS 可以几乎不访问磁盘就完成大部分路径解析。</li>
+</ul>
+</li>
+</ul>
+<p>注意,这里dentry cache和inode cache都是保存在内存之中的</p>
+<h2 id="文件系统的路径名查找"><a href="#文件系统的路径名查找" class="headerlink" title="文件系统的路径名查找"></a>文件系统的路径名查找</h2><p>这里以进程打开一个位于磁盘上的文件为例子 <code>open(filename, flags, mode)</code></p>
+<p>由于open要使用到系统的资源,因此需要使用SYS_OPEN, 陷入系统调用之后. 此时内核会去检查 <code>dentrycache</code> 查看有没有文件名对于的inode.如果找到了,那么根据该inode以及flags,mode,绑定对应inode中操作的函数指针,创建一个file类型,挂载在进程的file_struct中,同时,给该file对象分配一个fd,并且在fd_table中添加fd到file的映射,以根据文件描述符直接定位到制定的file. 如果没有找到,那么会依据目录名通过VFS中文件名解析的方式去查找,来返回对应文件名的inode,找到之后,在 <code>dentrycache</code>中添加这对映射关系,然后重复上面更新到进程的步骤.最后将对应的文件描述符返回.</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Linux中的文件系统</p><p><a href="https://kosa-as.github.io/2026/01/04/os/Linux中的文件系统/">https://kosa-as.github.io/2026/01/04/os/Linux中的文件系统/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>kosa-as</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2026-01-04</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2026-01-04</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a><a class="link-muted mr-2" rel="tag" href="/tags/IO/">IO</a></div><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a><a class="a2a_button_facebook"></a><a class="a2a_button_twitter"></a><a class="a2a_button_telegram"></a><a class="a2a_button_whatsapp"></a><a class="a2a_button_reddit"></a></div><script src="https://static.addtoany.com/menu/page.js" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2026/01/04/os/%E7%94%A8hexo+icarus%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">用hexo+icarus搭建个人博客</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2026/01/04/os/Linux%E4%B8%AD%E7%9A%84%E8%BF%9B%E7%A8%8B/"><span class="level-item">Linux的进程</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div id="comment-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+            id: "e72c610d78db165d316941e154de73ce",
+            repo: "kosa-as.github.io",
+            owner: "kosa-as",
+            clientID: "3b2bef5e46e6c8df3949",
+            clientSecret: "842d82f5dfdd26dc2821298dc2b426e9dede463e",
+            admin: ["kosa-as"],
+            createIssueManually: false,
+            distractionFreeMode: false,
+            perPage: 10,
+            pagerDirection: "last",
+            
+            
+            enableHotKey: true,
+            
+        })
+        gitalk.render('comment-container')</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.jpg" alt="wwh66258"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">wwh66258</p><p class="is-size-6 is-block">Software Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>上海 普陀</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">20</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">10</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">43</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/kosa-as" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/kosa-as"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/C/"><span class="level-start"><span class="level-item">C++</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile" href="/categories/Java/"><span class="level-start"><span class="level-item">Java</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/STL/"><span class="level-start"><span class="level-item">STL</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E4%BA%91/"><span class="level-start"><span class="level-item">云</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E4%BA%91%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83/"><span class="level-start"><span class="level-item">云数据中心</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="level-start"><span class="level-item">博客搭建</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/"><span class="level-start"><span class="level-item">前端开发</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">操作系统</span></span><span class="level-end"><span class="level-item tag">3</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Linux的内存</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E5%86%85%E6%A0%B8%E5%90%8C%E6%AD%A5/">Linux的内核同步</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%92%8C%E4%BF%A1%E5%8F%B7/">Linux的系统调用和信号</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/%E7%94%A8hexo+icarus%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">用hexo+icarus搭建个人博客</a></p><p class="categories"><a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a> / <a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.546Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">Linux中的文件系统</a></p><p class="categories"><a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2026/01/"><span class="level-start"><span class="level-item">一月 2026</span></span><span class="level-end"><span class="level-item tag">17</span></span></a></li><li><a class="level is-mobile" href="/archives/2025/02/"><span class="level-start"><span class="level-item">二月 2025</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/C-%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/"><span class="tag">C++关键字解析</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C-%E6%8C%87%E9%92%88/"><span class="tag">C++指针</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/"><span class="tag">C++语言特性</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GitHub-Pages/"><span class="tag">GitHub Pages</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Gitalk/"><span class="tag">Gitalk</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/IO/"><span class="tag">IO</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Icarus/"><span class="tag">Icarus</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OLAP/"><span class="tag">OLAP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OLTP/"><span class="tag">OLTP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RAII/"><span class="tag">RAII</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/SFINAE/"><span class="tag">SFINAE</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/STL/"><span class="tag">STL</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Template/"><span class="tag">Template</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/k8s/"><span class="tag">k8s</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/"><span class="tag">lambda表达式</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%B8%AD%E6%96%AD/"><span class="tag">中断</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80/"><span class="tag">内存寻址</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"><span class="tag">内存管理</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%90%8C%E6%AD%A5/"><span class="tag">同步</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC/"><span class="tag">左值右值</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/"><span class="tag">并发编程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%B6%E8%A1%8C/"><span class="tag">并行</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%82%E5%B8%B8/"><span class="tag">异常</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%82%E6%AD%A5/"><span class="tag">异步</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%95%E7%94%A8/"><span class="tag">引用</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="tag">操作系统</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/"><span class="tag">数据仓库</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E6%B9%96/"><span class="tag">数据湖</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F/"><span class="tag">数据系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"><span class="tag">文件系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9E%84%E9%80%A0%E9%A1%BA%E5%BA%8F/"><span class="tag">构造顺序</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D/"><span class="tag">模板匹配</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B9%96%E4%BB%93%E4%B8%80%E4%BD%93/"><span class="tag">湖仓一体</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4/"><span class="tag">类型擦除</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"><span class="tag">编译原理</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="tag">设计模式</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6%E7%89%B9%E6%80%A7/"><span class="tag">运行时特性</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/"><span class="tag">进程描述符</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/"><span class="tag">面向对象编程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%A1%B5%E8%A1%A8/"><span class="tag">页表</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="kosa-as" height="28"></a><p class="is-size-7"><span>&copy; 2026 kosa-as</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

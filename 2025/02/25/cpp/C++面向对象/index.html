@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>C++面向对象 - kosa-as</title><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="3273dc"><meta name="application-name" content="kosa-as"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="msapplication-TileColor" content="3273dc"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="kosa-as"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="本文全面讲解C++面向对象编程的核心概念和实践技巧，包括封装、继承与多态三大特性的实现方式。详细比较了函数重载、重写和隐藏的区别，分析了虚函数实现多态的内部机制，以及单继承和多继承的内存布局。同时探讨了构造函数效率优化、对象初始化顺序和类成员访问控制等进阶主题，帮助开发者编写高效、优雅的面向对象代码。"><meta property="og:type" content="blog"><meta property="og:title" content="C++面向对象"><meta property="og:url" content="https://kosa-as.github.io/2025/02/25/cpp/C++%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"><meta property="og:site_name" content="kosa-as"><meta property="og:description" content="本文全面讲解C++面向对象编程的核心概念和实践技巧，包括封装、继承与多态三大特性的实现方式。详细比较了函数重载、重写和隐藏的区别，分析了虚函数实现多态的内部机制，以及单继承和多继承的内存布局。同时探讨了构造函数效率优化、对象初始化顺序和类成员访问控制等进阶主题，帮助开发者编写高效、优雅的面向对象代码。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://kosa-as.github.io/img/og_image.png"><meta property="article:published_time" content="2025-02-24T16:00:00.000Z"><meta property="article:modified_time" content="2026-01-04T09:16:20.544Z"><meta property="article:author" content="kosa-as"><meta property="article:tag" content="面向对象编程"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://kosa-as.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://kosa-as.github.io/2025/02/25/cpp/C++%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"},"headline":"C++面向对象","image":["https://kosa-as.github.io/img/og_image.png"],"datePublished":"2025-02-24T16:00:00.000Z","dateModified":"2026-01-04T09:16:20.544Z","author":{"@type":"Person","name":"kosa-as"},"publisher":{"@type":"Organization","name":"kosa-as","logo":{"@type":"ImageObject","url":"https://kosa-as.github.io/img/logo.png"}},"description":"本文全面讲解C++面向对象编程的核心概念和实践技巧，包括封装、继承与多态三大特性的实现方式。详细比较了函数重载、重写和隐藏的区别，分析了虚函数实现多态的内部机制，以及单继承和多继承的内存布局。同时探讨了构造函数效率优化、对象初始化顺序和类成员访问控制等进阶主题，帮助开发者编写高效、优雅的面向对象代码。"}</script><link rel="canonical" href="https://kosa-as.github.io/2025/02/25/cpp/C++%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.0.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="kosa-as" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">首页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/kosa-as"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2025-02-24T16:00:00.000Z" title="2025/2/25 00:00:00">2025-02-25</time>发表</span><span class="level-item"><time dateTime="2026-01-04T09:16:20.544Z" title="2026/1/4 17:16:20">2026-01-04</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/C/">C++</a></span><span class="level-item">25 分钟读完 (大约3744个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">C++面向对象</h1><div class="content"><!-- more -->
+
+<h4 id="1-面向对象的三大特性："><a href="#1-面向对象的三大特性：" class="headerlink" title="1.面向对象的三大特性："></a>1.面向对象的三大特性：</h4><p>封装，继承，多态</p>
+<h4 id="2-重载、-重写-和-隐藏"><a href="#2-重载、-重写-和-隐藏" class="headerlink" title="2.重载、**重写 和 **隐藏"></a>2.<strong>重载</strong>、**重写 和 **隐藏</h4><table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>重载（Overloading）</th>
+<th>重写（Overriding）</th>
+<th>隐藏（Hiding）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>作用域</strong></td>
+<td>同一个类</td>
+<td>继承体系（子类 vs. 父类）</td>
+<td>继承体系（子类 vs. 父类）</td>
+</tr>
+<tr>
+<td><strong>函数名</strong></td>
+<td>相同</td>
+<td>相同</td>
+<td>相同</td>
+</tr>
+<tr>
+<td><strong>参数列表</strong></td>
+<td>必须不同</td>
+<td>必须相同</td>
+<td>可相同或不同</td>
+</tr>
+<tr>
+<td><strong>返回类型</strong></td>
+<td>可以不同，但不影响重载</td>
+<td>不能改变（C++11 允许协变返回类型）</td>
+<td>可以不同</td>
+</tr>
+<tr>
+<td><strong>访问方式</strong></td>
+<td>直接调用</td>
+<td>通过基类指针或引用调用</td>
+<td>直接调用</td>
+</tr>
+<tr>
+<td><strong>虚函数</strong></td>
+<td>无关</td>
+<td>必须是 <code>virtual</code></td>
+<td>无关</td>
+</tr>
+<tr>
+<td><strong>影响</strong></td>
+<td>编译期选择不同方法</td>
+<td>运行时调用子类方法（动态绑定）</td>
+<td>隐藏父类同名方法，必须使用 <code>Base::func()</code> 访问</td>
+</tr>
+</tbody></table>
+<ol>
+<li><strong>重载（Overloading）</strong> 发生在<strong>同一个类</strong>，<strong>参数不同</strong>，返回值可以不同，属于<strong>编译期多态</strong>。</li>
+<li><strong>重写（Overriding）</strong> 发生在<strong>继承体系</strong>，<strong>子类重写基类的虚函数</strong>，必须<strong>函数签名（用于在重载时标识不同的函数）一致</strong>，属于<strong>运行时多态</strong>。</li>
+<li><strong>隐藏（Hiding）</strong> 发生在<strong>继承体系</strong>，但不是<strong>虚函数重写</strong>，而是<strong>子类定义了同名函数，隐藏了父类版本</strong>，调用父类方法需要 <code>Base::func()</code>。</li>
+</ol>
+<p>在实践中，<strong>虚函数重写</strong>是 OOP 里最重要的特性，它允许多态行为，而隐藏可能导致代码难以维护，因此建议避免让子类的方法隐藏父类的方法，除非有特殊需求。</p>
+<h4 id="3-多态及其实现办法"><a href="#3-多态及其实现办法" class="headerlink" title="3.多态及其实现办法"></a>3.多态及其实现办法</h4><ul>
+<li>多态分为运行时多态（通过虚函数实现）和编译时多态（通过函数重载和模板实现）。</li>
+<li><strong>运行时多态执行的核心步骤</strong>  （运行时多态，虚函数必须为 <code>virtual</code>,否则可能会引起内存泄漏）<ol>
+<li><strong>对象构造时初始化虚函数指针（vptr，存储在对象的实例内存中）</strong><ul>
+<li>当对象被构造时，编译器会隐式地在对象内存中插入一个指向**虚函数表（vtable）**的指针（<code>vptr</code>）。</li>
+<li><code>vptr</code> 的值由对象的实际类型决定。例如：<ul>
+<li><code>Base</code> 类型的对象，<code>vptr</code> 指向 <code>Base</code> 的虚函数表。</li>
+<li><code>Derived</code> 类型的对象，<code>vptr</code> 指向 <code>Derived</code> 的虚函数表。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>虚函数表（vtable）的结构</strong>    （<strong>存储在只读数据段中，并且全局唯一</strong>）<ul>
+<li>每个有虚函数的类都有一个对应的虚函数表（静态存储区）。</li>
+<li>虚函数表是一个函数指针数组，每个条目指向该类的虚函数实现。</li>
+<li>若派生类覆盖了基类的虚函数，则虚函数表中对应的条目会被替换为派生类的函数地址。</li>
+</ul>
+</li>
+<li><strong>通过基类指针或引用调用虚函数</strong><ul>
+<li>当通过基类指针或引用调用虚函数时，编译器会生成代码：<ol>
+<li>从对象的 <code>vptr</code> 找到对应的虚函数表。</li>
+<li>根据虚函数在表中的索引（由编译器确定）找到函数地址。</li>
+<li>调用该函数地址指向的实现。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="4-虚函数和纯虚函数"><a href="#4-虚函数和纯虚函数" class="headerlink" title="4.虚函数和纯虚函数"></a>4.虚函数和纯虚函数</h4><pre><code>在虚函数中，基类需要提供默认实现，并且基类是可以实例化的。但是在纯虚函数中，基类不提供实现（但是可以定义，但是使用必须显示的使用），同时基类不允许被实例化，并且派生类必须覆盖，要给出纯虚函数的实现，否则仍然是抽象类。（只要类中有一个纯虚函数，那么这个类就不能被初始化）
+
+纯虚函数更多的应用在接口之中，来实现接口和实现的分离，充分体现面向对象的特性。此外，纯虚函数也和虚函数一样，要指定虚构函数，并且为`virtual`
+
+为什么纯虚类的构造函数必须是`virtual`的：因为多态对象的析构是从派生类开始到基类结束的，只有这样才能保证内存被正确的释放。在析构时，需要动态调用来保证资源的全部释放。
+</code></pre>
+<h4 id="5-多继承"><a href="#5-多继承" class="headerlink" title="5.多继承"></a>5.多继承</h4><p>在 <code>CPP</code>中，与 <code>Java</code>不同的一点是 <code>CPP</code>允许多继承。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base1, <span class="keyword">public</span> Base2 &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>但是在多继承中，常见的问题是二义性问题，和棱形问题</p>
+<ul>
+<li><p>菱形问题：</p>
+<ul>
+<li>当一个派生类从两个或多个基类继承，而这些基类又共同继承自同一个基类时，会导致二义性 和数据冗余 。用虚继承可以解决这个问题</li>
+</ul>
+</li>
+<li><p>二义性问题：</p>
+<ul>
+<li>如果多个基类有同名成员，直接访问会引发编译错误。用显式指定基类的作用域可以解决这个问题。</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-深拷贝和浅拷贝"><a href="#6-深拷贝和浅拷贝" class="headerlink" title="6.深拷贝和浅拷贝"></a>6.深拷贝和浅拷贝</h4><ul>
+<li>深拷贝：会重新复制内容并且分配内存，并且每个对象独立管理其对应的内存（类似于 <code>unique_ptr</code>）</li>
+<li>浅拷贝：只会复制指针的地址，并且多个对象共享同一块内存。但是可能会导致double free，悬垂指针的问题。</li>
+<li>此外<strong>资源管理类</strong> 必须遵循”<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rule_of_three_(C%2B%2B_programming)">Rule of Three </a>“：  如果定义了析构函数、拷贝构造函数或赋值运算符中的任意一个，通常需定义全部三个</li>
+</ul>
+<h4 id="7-Base-ptr-new-Derived-的一些理解"><a href="#7-Base-ptr-new-Derived-的一些理解" class="headerlink" title="7.Base* ptr &#x3D; new Derived()的一些理解"></a>7.Base* ptr &#x3D; new Derived()的一些理解</h4><ul>
+<li><p>首先是Base* ptr，这表明ptr是静态类型Base*,并且是保存在栈空间上的</p>
+</li>
+<li><p>然后ptr指向的是堆空间上的Derive()对象。这表明动态类型是Derived()</p>
+</li>
+<li><p>这里，由于Derived是继承的Base，因此在Derived的堆空间中，结构是这样的（如果Base有虚函数），同时Base中的属性也会被继承下来（无论是否private）只不过在Derived中无法访问。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">堆上的 Derived 对象：</span><br><span class="line">+------------------+</span><br><span class="line">| <span class="built_in">vptr</span>(指向Derived) |</span><br><span class="line">+------------------+</span><br><span class="line">| base_data        |</span><br><span class="line">+------------------+</span><br><span class="line">| derived_data     |</span><br><span class="line">+------------------+</span><br></pre></td></tr></table></figure></li>
+<li><p>注意，这里的Base* ptr只能访问Base类中的属性和方法。当访问Base中的虚函数时，编译器会因为访问虚函数，因此触发动态调用，使用虚函数表指针去虚函数表中寻找</p>
+</li>
+</ul>
+<h4 id="8-单继承和多继承的虚函数表"><a href="#8-单继承和多继承的虚函数表" class="headerlink" title="8.单继承和多继承的虚函数表"></a>8.单继承和多继承的虚函数表</h4><p><strong>单继承</strong></p>
+<ul>
+<li>只有 <strong>1 张 <code>vtable</code></strong>，对象中<strong>只有 1 个 <code>vptr</code></strong>。</li>
+<li><strong>调用虚函数时</strong>，<code>vptr</code> 访问 <code>vtable</code>，跳转到函数地址。</li>
+</ul>
+<p><strong>多继承</strong></p>
+<ul>
+<li><strong>每个 <code>Base</code> 类有独立的 <code>vtable</code></strong>，<code>Derived</code> <strong>有多个 <code>vptr</code></strong>。</li>
+<li><strong>访问 <code>Base1</code> 相关函数时，走 <code>vptr1 → vtable_for_Base1</code></strong>。</li>
+<li><strong>访问 <code>Base2</code> 相关函数时，走 <code>vptr2 → vtable_for_Base2</code></strong>。</li>
+</ul>
+<h4 id="9-如何禁止构造函数的使用"><a href="#9-如何禁止构造函数的使用" class="headerlink" title="9.如何禁止构造函数的使用"></a>9.如何禁止构造函数的使用</h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>适用场景</th>
+<th>是否允许子类实例化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>= delete</code></td>
+<td>彻底禁止构造</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>private</code> 构造函数</td>
+<td>外部不能创建对象，但 <code>friend</code> 可创建</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><code>protected</code> 构造函数</td>
+<td>允许子类创建对象，但基类不可实例化</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>static</code> 方法</td>
+<td>通过 <code>static</code> 方法创建对象（单例模式）</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>抽象类（纯虚函数）</td>
+<td>作为基类强制继承</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<h4 id="10-什么是默认构造函数"><a href="#10-什么是默认构造函数" class="headerlink" title="10.什么是默认构造函数"></a>10.什么是默认构造函数</h4><p><strong>默认构造函数</strong>是<strong>没有参数</strong>或<strong>所有参数都有默认值</strong>的构造函数。如果程序员没有显式定义构造函数，<strong>编译器会自动提供一个默认构造函数</strong>。</p>
+<ul>
+<li><strong>没有参数</strong> 或者 <strong>所有参数都有默认值</strong>。</li>
+<li><strong>用于创建对象时自动调用</strong>，初始化对象的成员变量。</li>
+<li><strong>如果没有显式定义，编译器会自动生成一个</strong>（但不会初始化成员变量）。</li>
+<li><strong>如果定义了其它带参数的构造函数</strong>，编译器<strong>不会</strong>再提供默认构造函数（C++11 之后）。</li>
+</ul>
+<h4 id="11-如何提高构造函数的效率"><a href="#11-如何提高构造函数的效率" class="headerlink" title="11.如何提高构造函数的效率"></a>11.如何提高构造函数的效率</h4><p>使用成员初始化列表构造效率最高的原因：避免了默认构造和赋值的双重开销，而是直接调用构造函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Example</span> &#123;</span><br><span class="line">    std::string s;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 初始化列表：直接调用 std::string 的构造函数</span></span><br><span class="line">    <span class="built_in">Example</span>() : <span class="built_in">s</span>(<span class="string">&quot;Hello&quot;</span>) &#123;&#125; </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造函数体内赋值：先默认构造 s，再赋值</span></span><br><span class="line">    <span class="built_in">Example</span>() &#123; </span><br><span class="line">        s = <span class="string">&quot;Hello&quot;</span>;  <span class="comment">// 生成临时字符串对象，再赋值给 s</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>优势从上面就显而易见</p>
+<table>
+<thead>
+<tr>
+<th><strong>优化方法</strong></th>
+<th><strong>适用场景</strong></th>
+<th><strong>优化点</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>使用成员初始化列表</strong> &#x3D;&gt; <code>A() : x(10), y(3.14) {}</code></td>
+<td>成员变量的初始化</td>
+<td>避免默认构造 + 赋值</td>
+</tr>
+<tr>
+<td><strong>避免不必要的构造</strong> &#x3D;&gt; <code>void foo(A a) { }  // ❌</code> <code>void foo(const A&amp; a) { }  // ✅</code></td>
+<td>传参、返回值</td>
+<td>传引用、RVO 优化</td>
+</tr>
+<tr>
+<td><strong>使用 <code>explicit</code></strong></td>
+<td>防止隐式转换</td>
+<td>避免额外构造</td>
+</tr>
+<tr>
+<td><strong>避免 <code>new</code> 动态分配</strong></td>
+<td>资源管理</td>
+<td>使用栈分配或智能指针</td>
+</tr>
+<tr>
+<td><strong>优化容器初始化</strong></td>
+<td><code>std::vector</code> 等容器</td>
+<td>直接初始化，避免扩容</td>
+</tr>
+<tr>
+<td><strong>使用 <code>= default</code></strong></td>
+<td>编译器优化</td>
+<td>让编译器自动优化</td>
+</tr>
+<tr>
+<td><strong>使用 <code>std::move</code></strong></td>
+<td>资源移动优化</td>
+<td>避免不必要的拷贝</td>
+</tr>
+</tbody></table>
+<h4 id="12-类对象初始化顺序"><a href="#12-类对象初始化顺序" class="headerlink" title="12.类对象初始化顺序"></a>12.类对象初始化顺序</h4><p>首先按照继承的顺序进行基类的初始化 –&gt; 然后按照成员变量的申明顺序初始化，和<strong>构造函数初始化列表</strong>中的顺序无关 –&gt; 然后进行构造函数体的执行</p>
+<p>构造函数初始化列表指的是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Derived</span>() : <span class="built_in">m2</span>(<span class="string">&quot;m2&quot;</span>), <span class="built_in">m1</span>(<span class="string">&quot;m1&quot;</span>) &#123; <span class="comment">// 初始化列表顺序：m2 → m1（实际顺序仍按声明）</span></span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Derived constructor\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="13-友元函数的作用和使用场景"><a href="#13-友元函数的作用和使用场景" class="headerlink" title="13.友元函数的作用和使用场景"></a>13.友元函数的作用和使用场景</h4><ol>
+<li>运算符重载：当需要重载 <code>&lt;&lt;</code>或者 <code>&gt;&gt;</code>的时候，由于左操作数是 <code>ostream</code> 或 <code>istream</code></li>
+<li>跨类访问私有成员</li>
+<li>工具函数需要访问私有数据</li>
+</ol>
+<p>需要注意的是：</p>
+<p><strong>友元函数的注意事项</strong></p>
+<ol>
+<li><strong>破坏封装性</strong><br>友元函数会暴露类的内部实现，需谨慎使用，避免过度依赖。</li>
+<li><strong>友元关系不可传递</strong><br>若类 <code>A</code> 是类 <code>B</code> 的友元，类 <code>B</code> 是类 <code>C</code> 的友元，类 <code>A</code> <strong>不会自动成为</strong> 类 <code>C</code> 的友元。</li>
+<li><strong>友元声明的位置</strong><br>友元函数的声明必须出现在类的内部（通常在 <code>public</code> 或 <code>private</code> 区域，但权限不影响友元的访问能力）。</li>
+<li><strong>友元函数不是成员函数</strong><ul>
+<li>友元函数不属于类的成员，没有 <code>this</code> 指针。</li>
+<li>调用时直接通过函数名，而非对象（如 <code>exchange(a, b)</code>）。</li>
+</ul>
+</li>
+<li><strong>友元类</strong><br>可以将整个类声明为友元：</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">   <span class="keyword">friend</span> <span class="keyword">class</span> <span class="title class_">B</span>;  <span class="comment">// 类 B 的所有成员函数都可以访问 A 的私有成员</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="14-静态绑定和动态绑定"><a href="#14-静态绑定和动态绑定" class="headerlink" title="14.静态绑定和动态绑定"></a>14.静态绑定和动态绑定</h4><table>
+<thead>
+<tr>
+<th><strong>绑定时机</strong></th>
+<th>编译时</th>
+<th>运行时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>函数类型</strong></td>
+<td>非虚函数、重载函数、模板函数</td>
+<td>虚函数（virtual functions）</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>无额外开销</td>
+<td>需查虚函数表，有轻微开销</td>
+</tr>
+<tr>
+<td><strong>灵活性</strong></td>
+<td>固定，无法动态改变行为</td>
+<td>灵活，支持多态</td>
+</tr>
+</tbody></table>
+<h4 id="15-cpp模板编程"><a href="#15-cpp模板编程" class="headerlink" title="15.cpp模板编程"></a>15.cpp模板编程</h4><p>C++ 模板编程是泛型编程的核心技术，允许你编写与类型无关的通用代码。模板编程也是一种多态</p>
+<ul>
+<li>函数模板：用于创建通用函数，自动推导参数类型</li>
+<li>类模板：用于创建通用类（如容器）</li>
+<li>模板特化：为特定类型提供定制化实现</li>
+<li>模板元编程：在编译期执行计算，例如计算阶乘</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="type">int</span> N&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Factorial</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> value = N * Factorial&lt;N<span class="number">-1</span>&gt;::value;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span> &lt;&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Factorial</span>&lt;<span class="number">0</span>&gt; &#123;  <span class="comment">// 终止条件</span></span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> value = <span class="number">1</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line">std::cout &lt;&lt; Factorial&lt;<span class="number">5</span>&gt;::value; <span class="comment">// 输出 120（编译期计算）</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="16-如何避免不必要的拷贝来提高效率"><a href="#16-如何避免不必要的拷贝来提高效率" class="headerlink" title="16.如何避免不必要的拷贝来提高效率"></a>16.如何避免不必要的拷贝来提高效率</h4><ul>
+<li>使用引用或者指针来传递值 -&gt; 避免不必要的大型对象拷贝</li>
+<li>针对资源管理类使用 <code>std::move</code>来移动所属权</li>
+<li>尽可能的避免使用临时对象</li>
+</ul>
+<h4 id="17-实例化一个对象需要哪几个阶段"><a href="#17-实例化一个对象需要哪几个阶段" class="headerlink" title="17.实例化一个对象需要哪几个阶段"></a>17.实例化一个对象需要哪几个阶段</h4><table>
+<thead>
+<tr>
+<th><strong>阶段</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. 分配内存</strong></td>
+<td>在栈上或堆上分配存储空间</td>
+</tr>
+<tr>
+<td><strong>2. 调用构造函数</strong></td>
+<td>初始化对象、调用基类构造函数</td>
+</tr>
+<tr>
+<td><strong>3. 执行初始化</strong></td>
+<td>初始化成员变量，拷贝&#x2F;移动构造等</td>
+</tr>
+<tr>
+<td><strong>4. 使用对象</strong></td>
+<td>调用方法、访问成员变量</td>
+</tr>
+<tr>
+<td><strong>5. 调用析构函数</strong></td>
+<td>释放资源，执行清理操作</td>
+</tr>
+</tbody></table>
+<p>对象的实例化并不仅仅是构造函数的调用，而是一个完整的生命周期管理过程</p>
+<h4 id="18-如何让类中的函数无法访问类的成员变量"><a href="#18-如何让类中的函数无法访问类的成员变量" class="headerlink" title="18.如何让类中的函数无法访问类的成员变量"></a>18.如何让类中的函数无法访问类的成员变量</h4><table>
+<thead>
+<tr>
+<th><strong>方法</strong></th>
+<th><strong>是否能访问成员变量</strong></th>
+<th><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>static</code> 成员函数</td>
+<td>❌ 无法访问</td>
+<td>工具类、无状态函数</td>
+</tr>
+<tr>
+<td>内部 <code>private</code> 类</td>
+<td>❌ 无法访问</td>
+<td>数据封装，防止误操作</td>
+</tr>
+<tr>
+<td><code>PIMPL</code> 设计模式</td>
+<td>❌ 无法访问</td>
+<td>API 设计，隐藏实现细节</td>
+</tr>
+<tr>
+<td><code>friend</code> 友元类</td>
+<td>✅ 友元可访问</td>
+<td>需要控制访问权限</td>
+</tr>
+</tbody></table>
+<p>如果目标是让<strong>类的普通成员函数无法访问数据成员</strong>，最佳方案是<strong>使用 <code>static</code> 方法</strong> 或 <strong>隐藏数据（<code>PIMPL</code>、内部类）</strong>。</p>
+<h4 id="19-怎么限制类的对象只能创建在栈上或者堆上"><a href="#19-怎么限制类的对象只能创建在栈上或者堆上" class="headerlink" title="19.怎么限制类的对象只能创建在栈上或者堆上"></a>19.怎么限制类的对象只能创建在栈上或者堆上</h4><ul>
+<li><p>限制在堆上：</p>
+<ul>
+<li>将构造函数以及析构函数设为私有，同时提供一个静态的工厂函数用来返回在堆上创建的对象。（注意，这样做必须要手动释放堆空间，调用delete()直接delete this即可）</li>
+</ul>
+</li>
+<li><p>限制在栈上：</p>
+<ul>
+<li>删除 <code>new</code>和 <code>delete</code>关键字，来禁止在堆上创建</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="type">size_t</span>)</span> </span>= <span class="keyword">delete</span>;  <span class="comment">// 禁止 new</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="type">void</span>*)</span> </span>= <span class="keyword">delete</span>; <span class="comment">// 禁止 delete</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="20-类的默认私有继承和公有继承"><a href="#20-类的默认私有继承和公有继承" class="headerlink" title="20.类的默认私有继承和公有继承"></a>20.类的默认私有继承和公有继承</h4><p>在继承中，父类的所有属性和操作都会被继承到子类中，但是由于继承的默认是私有继承，导致无法直接访问父类的方法。（在下面的代码中，如果是 <code>class Test : Derived</code>那么Test的实例t无法直接调用 <code>t.Derived::foo()</code>）。而在类中的 <code>private</code>,<code>protected</code>,<code>public</code>修饰的操作或者属性，仅仅用于类的不同访问者的访问权限。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">foo</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">bar</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> :  Base &#123;  <span class="comment">// 需要 public 继承</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;  <span class="comment">// override 关键字增强可读性</span></span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Derived::foo&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">bar</span><span class="params">()</span> <span class="keyword">final</span> </span>&#123;  <span class="comment">// 需要 override 来表明继承自 Base</span></span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Derived::bar&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span> :  <span class="keyword">public</span> Derived&#123;  <span class="comment">// 需要 public 继承</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Test::foo&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Derived d;</span><br><span class="line">    d.<span class="built_in">foo</span>();</span><br><span class="line">    d.<span class="built_in">bar</span>();</span><br><span class="line">    Test t;</span><br><span class="line">    t.<span class="built_in">foo</span>();</span><br><span class="line">    t.Derived::<span class="built_in">foo</span>(); <span class="comment">// 这行仍然是合法的，但没有必要</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div><div class="article-licensing box"><div class="licensing-title"><p>C++面向对象</p><p><a href="https://kosa-as.github.io/2025/02/25/cpp/C++面向对象/">https://kosa-as.github.io/2025/02/25/cpp/C++面向对象/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>kosa-as</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2025-02-25</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2026-01-04</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/">面向对象编程</a></div><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a><a class="a2a_button_facebook"></a><a class="a2a_button_twitter"></a><a class="a2a_button_telegram"></a><a class="a2a_button_whatsapp"></a><a class="a2a_button_reddit"></a></div><script src="https://static.addtoany.com/menu/page.js" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2025/02/25/cpp/C++%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7%E7%9B%B8%E5%85%B3/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">C++语言特性相关</span></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div id="comment-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+            id: "be5b98c0b284cbc7016d603919531fc3",
+            repo: "kosa-as.github.io",
+            owner: "kosa-as",
+            clientID: "3b2bef5e46e6c8df3949",
+            clientSecret: "842d82f5dfdd26dc2821298dc2b426e9dede463e",
+            admin: ["kosa-as"],
+            createIssueManually: false,
+            distractionFreeMode: false,
+            perPage: 10,
+            pagerDirection: "last",
+            
+            
+            enableHotKey: true,
+            
+        })
+        gitalk.render('comment-container')</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatar.jpg" alt="wwh66258"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">wwh66258</p><p class="is-size-6 is-block">Software Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>上海 普陀</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">20</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">10</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">43</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/kosa-as" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/kosa-as"><i class="fab fa-github"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/C/"><span class="level-start"><span class="level-item">C++</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile" href="/categories/Java/"><span class="level-start"><span class="level-item">Java</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/categories/STL/"><span class="level-start"><span class="level-item">STL</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E4%BA%91/"><span class="level-start"><span class="level-item">云</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E4%BA%91%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83/"><span class="level-start"><span class="level-item">云数据中心</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="level-start"><span class="level-item">博客搭建</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/"><span class="level-start"><span class="level-item">前端开发</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">操作系统</span></span><span class="level-end"><span class="level-item tag">3</span></span></a><ul><li><a class="level is-mobile" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/"><span class="level-start"><span class="level-item">Linux</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Linux的内存</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E5%86%85%E6%A0%B8%E5%90%8C%E6%AD%A5/">Linux的内核同步</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%92%8C%E4%BF%A1%E5%8F%B7/">Linux的系统调用和信号</a></p><p class="categories"><a href="/categories/Linux/">Linux</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.547Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/%E7%94%A8hexo+icarus%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">用hexo+icarus搭建个人博客</a></p><p class="categories"><a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a> / <a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2026-01-04T09:16:20.546Z">2026-01-04</time></p><p class="title"><a href="/2026/01/04/os/Linux%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">Linux中的文件系统</a></p><p class="categories"><a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2026/01/"><span class="level-start"><span class="level-item">一月 2026</span></span><span class="level-end"><span class="level-item tag">17</span></span></a></li><li><a class="level is-mobile" href="/archives/2025/02/"><span class="level-start"><span class="level-item">二月 2025</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/C-%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/"><span class="tag">C++关键字解析</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C-%E6%8C%87%E9%92%88/"><span class="tag">C++指针</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C-%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7/"><span class="tag">C++语言特性</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GitHub-Pages/"><span class="tag">GitHub Pages</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Gitalk/"><span class="tag">Gitalk</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/IO/"><span class="tag">IO</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Icarus/"><span class="tag">Icarus</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OLAP/"><span class="tag">OLAP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/OLTP/"><span class="tag">OLTP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RAII/"><span class="tag">RAII</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/SFINAE/"><span class="tag">SFINAE</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/STL/"><span class="tag">STL</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Template/"><span class="tag">Template</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/k8s/"><span class="tag">k8s</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/"><span class="tag">lambda表达式</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%B8%AD%E6%96%AD/"><span class="tag">中断</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80/"><span class="tag">内存寻址</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"><span class="tag">内存管理</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%90%8C%E6%AD%A5/"><span class="tag">同步</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B7%A6%E5%80%BC%E5%8F%B3%E5%80%BC/"><span class="tag">左值右值</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/"><span class="tag">并发编程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%B6%E8%A1%8C/"><span class="tag">并行</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%82%E5%B8%B8/"><span class="tag">异常</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%82%E6%AD%A5/"><span class="tag">异步</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%BC%95%E7%94%A8/"><span class="tag">引用</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><span class="tag">性能优化</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="tag">操作系统</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/"><span class="tag">数据仓库</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E6%B9%96/"><span class="tag">数据湖</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%B0%E6%8D%AE%E7%B3%BB%E7%BB%9F/"><span class="tag">数据系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"><span class="tag">文件系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9E%84%E9%80%A0%E9%A1%BA%E5%BA%8F/"><span class="tag">构造顺序</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D/"><span class="tag">模板匹配</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B9%96%E4%BB%93%E4%B8%80%E4%BD%93/"><span class="tag">湖仓一体</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B1%BB%E5%9E%8B%E6%93%A6%E9%99%A4/"><span class="tag">类型擦除</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"><span class="tag">编译原理</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="tag">设计模式</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BF%90%E8%A1%8C%E6%97%B6%E7%89%B9%E6%80%A7/"><span class="tag">运行时特性</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/"><span class="tag">进程描述符</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B/"><span class="tag">面向对象编程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%A1%B5%E8%A1%A8/"><span class="tag">页表</span><span class="tag">1</span></a></div></div></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="kosa-as" height="28"></a><p class="is-size-7"><span>&copy; 2026 kosa-as</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script data-pjax src="/js/insight.js" defer></script><script data-pjax>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
